@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_price"
+        android:title="Price" />
+    <item
+        android:id="@+id/menu_location"
+        android:title="Location" />
+    <item
+        android:id="@+id/menu_recent_products"
+        android:title="Recent Products" />
+
+</menu>

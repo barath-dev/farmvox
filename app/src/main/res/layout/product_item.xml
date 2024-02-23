@@ -1,0 +1,60 @@
+<!-- res/layout/item_product.xml -->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- ImageView for Product Image -->
+        <ImageView
+            android:id="@+id/productImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/tomato" />
+
+        <!-- TextView for Product Name -->
+        <TextView
+            android:id="@+id/productNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/productImageView"
+            android:layout_marginTop="8dp"
+            android:text="Product Name"
+            android:textSize="16sp" />
+
+        <!-- TextView for Product Price -->
+        <TextView
+            android:id="@+id/productPriceTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/productNameTextView"
+            android:layout_marginTop="4dp"
+            android:text="Price: $0.00"
+            android:textSize="14sp" />
+
+        <!-- TextView for Product Quantity -->
+        <TextView
+            android:id="@+id/productQuantityTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/productPriceTextView"
+            android:layout_marginTop="4dp"
+            android:text="Quantity: 0"
+            android:textSize="14sp" />
+
+        <!-- Button for adding to cart -->
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/productQuantityTextView"
+            android:layout_marginTop="8dp"
+            android:text="Add to Cart" />
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

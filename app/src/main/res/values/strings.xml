@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">loginsqllite</string>
+    <string name="total_price_format">Total Price: $%.2f</string>
+    <string-array name="roles_array">
+        <item>Farmer</item>
+        <item>Admin</item>
+        <item>DeliveryBoy</item>
+        <item>Consumer</item>
+    </string-array>
+    <string-array name="products_array">
+        <item>Tomato</item>
+        <item>Potato</item>
+    </string-array>
+</resources>
