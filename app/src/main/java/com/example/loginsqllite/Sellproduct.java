@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.database.Cursor;
 
 import java.text.DecimalFormat;
+import java.util.Random;
 
 public class Sellproduct extends AppCompatActivity {
     private Spinner productSpinner;
@@ -43,7 +44,7 @@ public class Sellproduct extends AppCompatActivity {
         productSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                calculateAndDisplayPrice();
+                Toast.makeText(Sellproduct.this, "Selected: " + productSpinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -58,7 +59,7 @@ public class Sellproduct extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                calculateAndDisplayPrice();
+                Toast.makeText(Sellproduct.this, "Quantity changed: " + s.toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -72,11 +73,11 @@ public class Sellproduct extends AppCompatActivity {
                     String selectedProduct = productSpinner.getSelectedItem().toString();
                     int quantity = Integer.parseInt(quantityText.getText().toString());
                     // Use PriceCalculator to get market price per kg asynchronously
-                    PriceCalculator.getMarketPricePerKg(selectedProduct, new PriceCalculator.PriceCallback() {
-                        @Override
-                        public void onPriceReceived(double marketPricePerKg) {
+
                             // Calculate the price based on market price and quantity
-                            double price = calculatePrice(marketPricePerKg, quantity);
+                            /*double price = calculatePrice(marketPricePerKg, quantity);*/
+                            Random random = new Random();
+                            double price  = random.nextDouble()*100;
 
                             Cursor userDetailsCursor = dbHelper.getuserdetails(username);
 
@@ -105,15 +106,6 @@ public class Sellproduct extends AppCompatActivity {
                                 userDetailsCursor.close();
                             }
                         }
-
-                        @Override
-                        public void onFailure(String errorMessage) {
-                            Toast.makeText(Sellproduct.this, "Error fetching market price: " + errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    Toast.makeText(Sellproduct.this, "Please agree with the price", Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }

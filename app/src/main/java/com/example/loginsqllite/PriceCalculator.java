@@ -34,12 +34,13 @@ public class PriceCalculator {
                 .get()
                 .build();
 
+
         new Thread(() -> {
             try {
                 Response response = client.newCall(request).execute();
 
                 if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
+                    String responseBody = response.body().toString();
 
                     XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                     factory.setNamespaceAware(true);

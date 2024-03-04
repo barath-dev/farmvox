@@ -39,7 +39,7 @@ public class Farmer extends AppCompatActivity {
     TextView question;
     TextView answer;
     Button btnSpeak;
-    Button btnSellCrops;
+    Button btnSellCrops, btnMyCrops;
     TextToSpeech textToSpeech;
 
 
@@ -52,10 +52,20 @@ public class Farmer extends AppCompatActivity {
         answer = findViewById(R.id.answer);
         btnSpeak = findViewById(R.id.submit);
         btnSellCrops = findViewById(R.id.sellCrops);
+        btnMyCrops = findViewById(R.id.MyProducts);
         TextView textView = findViewById(R.id.textView);
         textView.setText("FarmVox");
         TextView tag = findViewById(R.id.tagline);
         tag.setText("Vibrant Farms,Voice as Nature's Arms");
+
+        btnMyCrops.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                // Start the "MyCrops" activity
+                Intent intent = new Intent(Farmer.this, MyCrops.class);
+                intent.putExtra("username",username);// Replace "MyCrops" with the actual activity representing the "MyCrops" page
+                startActivity(intent);
+            }
+        });
         btnSellCrops.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 // Start the "Sell" activity

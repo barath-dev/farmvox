@@ -84,8 +84,25 @@ public class MainActivity extends AppCompatActivity {
                                     Boolean insert = DB.insertuserdata(user, pass, selectedRole, latitude, longitude);
                                     if (insert == true) {
                                         Toast.makeText(MainActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        startActivity(intent);
+                                        String userRole=DB.getUserRole(user);
+                                        if("Farmer".equals(userRole)){
+                                            Intent farmerIntent=new Intent(getApplicationContext(),Farmer.class);
+                                            farmerIntent.putExtra("username", user);
+                                            startActivity(farmerIntent);
+                                        } else if ("Consumer".equals(userRole)) {
+                                            Intent consumerIntent = new Intent(getApplicationContext(), Consumer.class);
+                                            consumerIntent.putExtra("username", user);
+                                            startActivity(consumerIntent);
+                                        } else if ("Admin".equals(userRole)) {
+                                            Intent admin = new Intent(getApplicationContext(), MapsActivity.class);
+                                            //send coordinates to admin activity
+                                           admin.putExtra("username", user);
+                                            startActivity(admin);
+                                        }
+                                        else if ("Delivery Boy".equals(userRole)) {
+                                            Intent consumerIntent = new Intent(getApplicationContext(), DeliveryBoy.class);
+                                            startActivity(consumerIntent);
+                                        }
                                     } else {
                                         Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
                                     }
@@ -129,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
                         callback.onLocationReceived(latitude, longitude);
                     } else {
                         Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show();
+                        double latitude =  12.0908;
+                        double longitude = 76.2365;
+                        // Call the callback with the obtained latitude and longitude
+                        callback.onLocationReceived(latitude, longitude);
                     }
                 });
             } else {

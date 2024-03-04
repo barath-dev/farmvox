@@ -1,2 +1,4 @@
-package com.example.loginsqllite;public @interface UiThreadTest {
+package com.example.loginsqllite;
+
+public @interface UiThreadTest {
 }

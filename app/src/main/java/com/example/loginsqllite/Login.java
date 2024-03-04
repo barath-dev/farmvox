@@ -41,6 +41,7 @@ public class Login extends AppCompatActivity {
                             startActivity(farmerIntent);
                         } else if ("Consumer".equals(userRole)) {
                             Intent consumerIntent = new Intent(getApplicationContext(), Consumer.class);
+                            consumerIntent.putExtra("username", user);  
                             startActivity(consumerIntent);
                         } else if ("Admin".equals(userRole)) {
                             Intent consumerIntent = new Intent(getApplicationContext(), Admin.class);
