@@ -35,7 +35,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-         username = getIntent().getStringExtra("username");
+        username = getIntent().getStringExtra("username");
 
 
 
@@ -60,9 +60,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        Cursor userDetailsCursor = DB.getuserdetails(username);
+       Cursor userDetailsCursor = DB.getuserdetails(username);
 
-        ArrayList<LatLng> userLocations = null;
+         ArrayList<LatLng> userLocations = null;
         if (userDetailsCursor.getCount() == 0) {
             Toast.makeText(MapsActivity.this, "No user details found", Toast.LENGTH_SHORT).show();
         } else {
@@ -71,8 +71,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             while (userDetailsCursor.moveToNext()) {
                 LatLng userLocation = new LatLng(Double.parseDouble(userDetailsCursor.getString(3)), Double.parseDouble(userDetailsCursor.getString(4)));
                 userLocations.add(userLocation);
+                Toast.makeText(this, index, Toast.LENGTH_SHORT).show();
                 index++;
-
             }
             Toast.makeText(this, index, Toast.LENGTH_SHORT).show();
             userLocations.add(new LatLng(0, 0));
@@ -80,9 +80,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        for (int i = 0; i < userLocations.size(); i++) {
-            mMap.addMarker(new MarkerOptions().position(userLocations.get(i)).title("Marker in User " ));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocations.get(i)));
-        }
+      /*  for (int i = 0; i < userLocations.size(); i++) {*/
+            mMap.addMarker(new MarkerOptions().position(new LatLng(0,1)).title("Marker in User " ));
+       /*     mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocations.get(i)));
+        }*/
     }
 }

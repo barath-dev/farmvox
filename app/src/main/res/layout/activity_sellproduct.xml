@@ -34,21 +34,31 @@
 
 
         <!-- TextView to Display Price -->
-        <TextView
-            android:id="@+id/price_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Price: $0.00"
-            android:textSize="20sp"
-            android:layout_marginTop="20dp" />
 
 
         <!-- Checkbox for Agreement -->
+        <EditText
+            android:id="@+id/pricePerUnit"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="20dp"
+            android:hint="Price per Unit"
+            android:inputType="number"
+            android:textColorHint="#757575" />
+
+        <Spinner
+            android:id="@+id/unit_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Select Unit"
+            android:textColorHint="#757575"
+            android:layout_marginBottom="20dp" />
+
         <CheckBox
             android:id="@+id/agree_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:text="I agree with the price"
+            android:text="I agree to the terms and conditions"
             android:textSize="20sp"
             android:layout_marginTop="20dp" />
 

@@ -99,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
                                            admin.putExtra("username", user);
                                             startActivity(admin);
                                         }
-                                        else if ("Delivery Boy".equals(userRole)) {
+                                        else if ("DeliveryBoy".equals(userRole)) {
+                                            DBHelper db = new DBHelper(getApplicationContext());
+                                            db.createDeliveryBoy(user);
                                             Intent consumerIntent = new Intent(getApplicationContext(), DeliveryBoy.class);
                                             startActivity(consumerIntent);
                                         }

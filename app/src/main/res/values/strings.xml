@@ -11,5 +11,16 @@
         <item>Tomato</item>
         <item>Potato</item>
     </string-array>
+
+    <string-array name="unit_array">
+        <item>Kg</item>
+        <item>piece</item>
+        <item>Gram</item>
+        <item>Litre</item>
+        <item>Dozen</item>
+    </string-array>
     <string name="title_activity_maps">MapsActivity</string>
+
+    <string name="google_maps_key">AIzaSyCSv5NHHwD_UCaBzhH3evgkK6Gs1BiUJdM</string>
+    <string name="use_this_location">use this location</string>
 </resources>

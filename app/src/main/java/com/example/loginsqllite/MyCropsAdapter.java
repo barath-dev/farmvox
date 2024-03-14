@@ -16,9 +16,7 @@ public class MyCropsAdapter extends BaseAdapter {
 
     Context context;
 
-    DBHelper db = new DBHelper(context);
-
-   String username;
+    String username;
 
     Cursor cursor;
 
@@ -49,7 +47,7 @@ public class MyCropsAdapter extends BaseAdapter {
         return position;
     }
 
-    @SuppressLint({"Range", "InflateParams"})
+    @SuppressLint({"Range", "InflateParams", "SetTextI18n"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -60,10 +58,23 @@ public class MyCropsAdapter extends BaseAdapter {
             TextView cropName = (TextView) vi.findViewById(R.id.cartProductName);
             TextView cropQuantity = (TextView) vi.findViewById(R.id.cartProductQuantity);
             TextView cropPrice = (TextView) vi.findViewById(R.id.cartProductPrice);
+            TextView farmerName = (TextView) vi.findViewById(R.id.cartFarmerName);
+            Button buyNowButton = (Button) vi.findViewById(R.id.buyNowButton);
+            farmerName.setVisibility(View.GONE);
         Button deleteButton = (Button) vi.findViewById(R.id.removeButton);
-        cropName.setText(String.valueOf(cursor.getString(cursor.getColumnIndex("product_name"))));
-        cropQuantity.setText(String.valueOf(cursor.getString(cursor.getColumnIndex("product_quantity"))));
-        cropPrice.setText(String.valueOf(cursor.getString(cursor.getColumnIndex("product_price"))));
+        String crop_name = cursor.getString(cursor.getColumnIndex("product_name"));
+        crop_name = "Product Name: "+crop_name;
+        String crop_quantity = cursor.getString(cursor.getColumnIndex("product_quantity"));
+        crop_quantity = "Product Quantity: "+crop_quantity;
+        String crop_price = cursor.getString(cursor.getColumnIndex("product_price"));
+        crop_price = "Product Price: ₹"+crop_price;
+        String crop_unit = cursor.getString(cursor.getColumnIndex("product_unit"));
+        cropName.setText(crop_name);
+        buyNowButton.setVisibility(View.GONE);
+        cropQuantity.setText(crop_quantity + " " + crop_unit);
+        cropPrice.setText(crop_price + " per " + crop_unit);
+
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

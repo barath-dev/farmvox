@@ -1,4 +1,5 @@
 package com.example.loginsqllite;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,13 +9,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String USER_DATABASE_NAME = "User.db";
-    private static final String PRODUCT_DATABASE_NAME = "Product.db";
 
-    private static final String ORDERS_TABLE_NAME = "Orders.db";
+    public static final String ORDERS_TABLE_NAME = "orders";
 
-    // Database versions for both tables
+
+    public static final String CART_TABLE_NAME = "cart";
+
+
+
+
+
     private static final int USER_DATABASE_VERSION = 6; // Change this version number
-    private static final int PRODUCT_DATABASE_VERSION = 3; // Change this version number
+
+    // Change this version number
 
     // User database table and columns
     public static final String USER_TABLE_NAME = "users";
@@ -29,19 +36,47 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String PRODUCT_COL_USERNAME = "username";
 
     public static final String ORDERS_COL_DELIERYBOY = "deliveryBoy";
-    public static final String PRODUCT_COL_PASSWORD = "password";
-    public static final String PRODUCT_COL_ROLE = "role";
+
+    public static final String ORDER_COL_USERNAME = "username";
+    public static final String ORDER_COL_ROLE = "role";
+    public static final String ORDER_COL_LATITUDE_PICKUP = "latitude_pickup";
+    public static final String ORDER_COL_LONGITUDE_PICKUP = "longitude_pickup";
+    public static final String ORDER_COL_LATITUDE_DEST = "latitude_dest";
+    public static final String ORDER_COL_LONGITUDE_DEST = "longitude_dest";
+    public static final String ORDER_COL_PRODUCT_NAME = "product_name";
+    public static final String ORDER_COL_PRODUCT_PRICE = "product_price";
+    public static final String ORDER_COL_PRODUCT_QUANTITY = "product_quantity";
+
     public static final String PRODUCT_COL_LATITUDE = "latitude";
     public static final String PRODUCT_COL_LONGITUDE = "longitude";
     public static final String PRODUCT_COL_PRODUCT_NAME = "product_name";
     public static final String PRODUCT_COL_PRODUCT_PRICE = "product_price";
     public static final String PRODUCT_COL_PRODUCT_QUANTITY = "product_quantity";
 
-    public static final String CART_TABLE_NAME = "cart";
+    public static final String PRODUCT_COL_PRODUCT_UNIT = "product_unit";
+
     public static final String CART_COL_USERNAME = "username";
-    public static final String CART_COL_PRODUCT_NAME = "product_name";
-    public static final String CART_COL_PRODUCT_PRICE = "product_price";
-    public static final String CART_COL_PRODUCT_QUANTITY = "product_quantity";
+
+    public static final String CART_COL_PRODUCT_NAME = "cropName";
+    public static final String CART_COL_PRODUCT_PRICE = "price";
+    public static final String CART_COL_PRODUCT_QUANTITY = "quantity";
+
+    public static final String CART_COL_PRODUCT_UNIT = "unit";
+
+    public static  final String CART_COL_FARMER_NAME = "fName";
+
+    public static final String DISPATCHERS_TABLE_NAME = "dispatchers";
+    public static final String DISPATCHERS_COL_USERNAME = "username";
+    public static final String DISPATCHERS_COL_LATITUDE = "latitude";
+    public static final String DISPATCHERS_COL_LONGITUDE = "longitude";
+
+    public static final String DISPATCHERS_COL_CURRENT_ORDER = "current_order";
+
+    public static final String DISPATCHERS_COL_STATUS = "status";
+
+    public static final String DISPATCHERS_COL_DELIVERY_COUNT = "delivery_count";
+    private static final String ORDER_COL_F_NAME = "farmer_name";
+    private static final String ORDER_COL_PRODUCT_UNIT = "unit";
 
 
     public DBHelper(Context context) {
@@ -56,23 +91,19 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create Table " + USER_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT primary key, " + USER_COL_PASSWORD + " TEXT, " + USER_COL_ROLE + " TEXT, " + USER_COL_LATITUDE + " REAL, " + USER_COL_LONGITUDE + " REAL)");
 
         // Create the products table with updated columns
-        db.execSQL("create Table " + PRODUCT_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT primary key, " + PRODUCT_COL_PASSWORD + " TEXT, " + PRODUCT_COL_ROLE + " TEXT, " + PRODUCT_COL_LATITUDE + " REAL, " + PRODUCT_COL_LONGITUDE + " REAL, " + PRODUCT_COL_PRODUCT_NAME + " TEXT, " + PRODUCT_COL_PRODUCT_PRICE + " REAL, " + PRODUCT_COL_PRODUCT_QUANTITY + " INTEGER)");
+        db.execSQL("create Table " + PRODUCT_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT, "  + PRODUCT_COL_LATITUDE + " REAL, " + PRODUCT_COL_LONGITUDE + " REAL, " + PRODUCT_COL_PRODUCT_NAME + " TEXT, "+ PRODUCT_COL_PRODUCT_UNIT + " TEXT, " + PRODUCT_COL_PRODUCT_PRICE + " REAL, " + PRODUCT_COL_PRODUCT_QUANTITY + " INTEGER)");
 
         // Create the orders table with updated columns
-        db.execSQL("create Table " + ORDERS_TABLE_NAME + " (" + PRODUCT_COL_USERNAME + " TEXT, " + PRODUCT_COL_ROLE + " TEXT, " + PRODUCT_COL_LATITUDE + " REAL, " + PRODUCT_COL_LONGITUDE + " REAL, " + ORDERS_COL_DELIERYBOY + " TEXT, " + PRODUCT_COL_PRODUCT_PRICE + " REAL, " + PRODUCT_COL_PRODUCT_QUANTITY + " INTEGER)");
+        db.execSQL("create Table " + ORDERS_TABLE_NAME + " (" + ORDER_COL_USERNAME + " TEXT, " + ORDER_COL_LATITUDE_PICKUP + " REAL, " + ORDER_COL_LONGITUDE_PICKUP + " REAL, " + ORDER_COL_LATITUDE_DEST + " REAL, " + ORDER_COL_LONGITUDE_DEST + " REAL, " + ORDER_COL_PRODUCT_PRICE + " REAL, " + ORDER_COL_PRODUCT_QUANTITY + " INTEGER, " + ORDER_COL_F_NAME + " TEXT, " + ORDER_COL_PRODUCT_NAME + " TEXT, " + ORDER_COL_PRODUCT_UNIT + " TEXT)");
 
-        db.execSQL("create Table " + CART_TABLE_NAME + " (" + CART_COL_USERNAME + " TEXT, " + CART_COL_PRODUCT_NAME + " TEXT, " + CART_COL_PRODUCT_PRICE + " REAL, " + CART_COL_PRODUCT_QUANTITY + " INTEGER)");
+        db.execSQL("create Table " + CART_TABLE_NAME + " (" + CART_COL_USERNAME + " TEXT, " + CART_COL_PRODUCT_NAME + " TEXT, " + CART_COL_PRODUCT_PRICE + " REAL, " + CART_COL_FARMER_NAME + " TEXT, " + CART_COL_PRODUCT_UNIT + " REAL, " + CART_COL_PRODUCT_QUANTITY + " INTEGER)");
+
+        db.execSQL("create Table " + DISPATCHERS_TABLE_NAME + " (" + DISPATCHERS_COL_USERNAME + " TEXT primary key, " + DISPATCHERS_COL_LATITUDE + " REAL, " + DISPATCHERS_COL_LONGITUDE + " REAL, " + DISPATCHERS_COL_CURRENT_ORDER + " TEXT, " + DISPATCHERS_COL_STATUS + " TEXT, " + DISPATCHERS_COL_DELIVERY_COUNT + " INTEGER)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion > oldVersion) {
-            // Drop the existing users and products tables
-            db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + PRODUCT_TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + CART_TABLE_NAME);
-            onCreate(db);
-        }
+
     }
 
 
@@ -102,7 +133,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public String getUserRole(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String role = "";
+        String role;
         Cursor cursor = db.rawQuery("SELECT " + USER_COL_ROLE + " FROM " + USER_TABLE_NAME + " WHERE " + USER_COL_USERNAME + " = ?", new String[]{username});
         if (cursor != null) {
             try {
@@ -142,28 +173,26 @@ public class DBHelper extends SQLiteOpenHelper {
         String[] selectionArgs = {username};
 
         // Execute the query and return the Cursor
-        Cursor cursor = db.query(USER_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
 
-        return cursor;
+        return db.query(USER_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
     }
 
     // Product related methods
 
     public boolean insertproductdata(
             String username,
-            String password,
-            String role,
             double latitude,
             double longitude,
             String selectedProduct,
+            String productUnit,
             double price,
             int quantity) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(PRODUCT_COL_USERNAME, username);
-        contentValues.put(PRODUCT_COL_ROLE, role);
         contentValues.put(PRODUCT_COL_LATITUDE, latitude);
+        contentValues.put(PRODUCT_COL_PRODUCT_UNIT, productUnit);
         contentValues.put(PRODUCT_COL_LONGITUDE, longitude);
         contentValues.put(PRODUCT_COL_PRODUCT_NAME, selectedProduct);
         contentValues.put(PRODUCT_COL_PRODUCT_PRICE, price);
@@ -175,7 +204,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean updateproductdata(
             String username,
             String password,
-            String role,
             double latitude,
             double longitude,
             String selectedProduct,
@@ -185,7 +213,6 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(PRODUCT_COL_USERNAME, username);
-        contentValues.put(PRODUCT_COL_ROLE, role);
         contentValues.put(PRODUCT_COL_LATITUDE, latitude);
         contentValues.put(PRODUCT_COL_LONGITUDE, longitude);
         contentValues.put(PRODUCT_COL_PRODUCT_NAME, selectedProduct);
@@ -197,24 +224,28 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean createOrder(
             String username,
-            String status,
             double latitude_dest,
             double longitude_dest,
             double latitude_source,
             double longitude_source,
             double price,
-            int quantity) {
+            String farmerName,
+            int quantity,
+            String cropName,
+            String unit) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(PRODUCT_COL_USERNAME, username);
-        contentValues.put(PRODUCT_COL_ROLE, status);
-        contentValues.put(PRODUCT_COL_LATITUDE, latitude_dest);
-        contentValues.put(PRODUCT_COL_LONGITUDE, longitude_dest);
-        contentValues.put(PRODUCT_COL_LATITUDE, latitude_source);
-        contentValues.put(PRODUCT_COL_LONGITUDE, longitude_source);
-        contentValues.put(PRODUCT_COL_PRODUCT_PRICE, price);
-        contentValues.put(PRODUCT_COL_PRODUCT_QUANTITY, quantity);
+        contentValues.put(ORDER_COL_USERNAME, username);
+        contentValues.put(ORDER_COL_LATITUDE_PICKUP, latitude_source);
+        contentValues.put(ORDER_COL_LONGITUDE_PICKUP, longitude_source);
+        contentValues.put(ORDER_COL_LATITUDE_DEST, latitude_dest);
+        contentValues.put(ORDER_COL_LONGITUDE_DEST, longitude_dest);
+        contentValues.put(ORDER_COL_PRODUCT_PRICE, price);
+        contentValues.put(ORDER_COL_PRODUCT_QUANTITY, quantity);
+        contentValues.put(ORDER_COL_F_NAME,farmerName);
+        contentValues.put(ORDER_COL_PRODUCT_NAME,cropName);
+        contentValues.put(ORDER_COL_PRODUCT_UNIT,unit);
         long result = db.insert(ORDERS_TABLE_NAME, null, contentValues);
         return result != -1;
     }
@@ -234,7 +265,6 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(PRODUCT_COL_USERNAME, username);
-        contentValues.put(PRODUCT_COL_ROLE, status);
         contentValues.put(PRODUCT_COL_LATITUDE, latitude_dest);
         contentValues.put(PRODUCT_COL_LONGITUDE, longitude_dest);
         contentValues.put(PRODUCT_COL_LATITUDE, latitude_source);
@@ -259,7 +289,6 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(PRODUCT_COL_USERNAME, username);
-        contentValues.put(PRODUCT_COL_ROLE, status);
         contentValues.put(PRODUCT_COL_LATITUDE, latitude_dest);
         contentValues.put(PRODUCT_COL_LONGITUDE, longitude_dest);
         contentValues.put(PRODUCT_COL_LATITUDE, latitude_source);
@@ -277,7 +306,6 @@ public class DBHelper extends SQLiteOpenHelper {
         // Define the columns you want to retrieve
         String[] columns = {
                 PRODUCT_COL_USERNAME,
-                PRODUCT_COL_ROLE,
                 PRODUCT_COL_LATITUDE,
                 PRODUCT_COL_LONGITUDE,
                 ORDERS_COL_DELIERYBOY,
@@ -318,9 +346,11 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] columns = {
+                PRODUCT_COL_USERNAME,
                 PRODUCT_COL_PRODUCT_NAME,
                 PRODUCT_COL_PRODUCT_PRICE,
-                PRODUCT_COL_PRODUCT_QUANTITY
+                PRODUCT_COL_PRODUCT_QUANTITY,
+                PRODUCT_COL_PRODUCT_UNIT
         };
 
         String selection = PRODUCT_COL_USERNAME + " = ?";
@@ -342,19 +372,31 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-   public String createCart(String username, String product_name, String product_price, String product_quantity) {
+    //create only if the product is not already in the cart
+   public String createCart(String username, String product_name, String product_quantity, String product_price,String product_unit,String farmer_name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CART_COL_USERNAME, username);
         contentValues.put(CART_COL_PRODUCT_NAME, product_name);
         contentValues.put(CART_COL_PRODUCT_PRICE, product_price);
         contentValues.put(CART_COL_PRODUCT_QUANTITY, product_quantity);
-        long result = db.insert(CART_TABLE_NAME, null, contentValues);
-        if (result == -1) {
-            return "Failed to add to cart";
-        } else {
-            return "Added to cart";
+        contentValues.put(CART_COL_FARMER_NAME, farmer_name);
+        contentValues.put(CART_COL_PRODUCT_UNIT, product_unit);
+
+        //check if the product is already in the cart
+        Cursor cursor = db.rawQuery("SELECT * FROM " + CART_TABLE_NAME + " WHERE " + CART_COL_USERNAME + " = ? AND " + CART_COL_PRODUCT_NAME + " = ? AND " + CART_COL_PRODUCT_QUANTITY + " = ? AND " + CART_COL_PRODUCT_PRICE + " = ?", new String[]{username, product_name, product_quantity, product_price});
+        if(cursor.getCount() > 0){
+            return "Product already in cart";
+        }else{
+            long result = db.insert(CART_TABLE_NAME, null, contentValues);
+            if (result == -1) {
+                return "Failed to add to cart";
+            } else {
+                return "Added to cart";
+            }
         }
+
+
     }
 
     public Cursor getCart(String username) {
@@ -365,22 +407,27 @@ public class DBHelper extends SQLiteOpenHelper {
                 CART_COL_USERNAME,
                 CART_COL_PRODUCT_NAME,
                 CART_COL_PRODUCT_PRICE,
-                CART_COL_PRODUCT_QUANTITY
+                CART_COL_PRODUCT_QUANTITY,
+                CART_COL_FARMER_NAME,
+                CART_COL_PRODUCT_UNIT
         };
 
         // Define the WHERE clause to find the user by username
         String selection = CART_COL_USERNAME + " = ?";
         String[] selectionArgs = {username};
 
-        // Execute the query and return the Cursor
-        Cursor cursor = db.query(CART_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
-
-        return cursor;
+        try {
+            // Execute the query and return the Cursor
+            Cursor cursor = db.query(CART_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+            return cursor;
+        } catch (SQLiteException e) {
+            return null;
+        }
     }
 
-    public String deleteCartItem(String username, String product_name,int product_quantity, int product_price) {
+    public String deleteCartItem(String username, String product_name,String product_quantity, String product_price) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int res = db.delete(CART_TABLE_NAME, CART_COL_USERNAME + " = ? AND " + CART_COL_PRODUCT_NAME + " = ?", new String[]{username, product_name});
+        int res = db.delete(CART_TABLE_NAME, CART_COL_USERNAME + " = ? AND " + CART_COL_PRODUCT_NAME + " = ? AND " + CART_COL_PRODUCT_QUANTITY + " = ? AND " + CART_COL_PRODUCT_PRICE + " = ?", new String[]{username, product_name, product_quantity, product_price});
         db.close();
         if (res > 0) {
             return "Deleted";
@@ -395,12 +442,12 @@ public class DBHelper extends SQLiteOpenHelper {
         // Define the columns you want to retrieve
         String[] columns = {
                 PRODUCT_COL_USERNAME,
-                PRODUCT_COL_ROLE,
                 PRODUCT_COL_LATITUDE,
                 PRODUCT_COL_LONGITUDE,
                 PRODUCT_COL_PRODUCT_NAME,
                 PRODUCT_COL_PRODUCT_PRICE,
-                PRODUCT_COL_PRODUCT_QUANTITY
+                PRODUCT_COL_PRODUCT_QUANTITY,
+                PRODUCT_COL_PRODUCT_UNIT
         };
 
 
@@ -411,4 +458,59 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
+    public void createDeliveryBoy(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DISPATCHERS_COL_USERNAME, username);
+        contentValues.put(DISPATCHERS_COL_STATUS, "Available");
+        contentValues.put(DISPATCHERS_COL_DELIVERY_COUNT, 0);
+        long result = db.insert(DISPATCHERS_TABLE_NAME, null, contentValues);
+    }
+
+    public  Cursor getPendingOrders(String username){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {
+                ORDER_COL_USERNAME,
+                ORDER_COL_ROLE,
+                ORDER_COL_LATITUDE_PICKUP,
+                ORDER_COL_LONGITUDE_PICKUP,
+                ORDER_COL_LATITUDE_DEST,
+                ORDER_COL_LONGITUDE_DEST,
+                ORDER_COL_PRODUCT_NAME,
+                ORDER_COL_PRODUCT_PRICE,
+                ORDER_COL_PRODUCT_QUANTITY,
+                ORDER_COL_PRODUCT_UNIT,
+                ORDER_COL_PRODUCT_NAME
+        };
+
+        // Define the WHERE clause to find the user by username
+        String selection = PRODUCT_COL_USERNAME + " = ?";
+        String[] selectionArgs = {username};
+
+        // Execute the query and return the Cursor
+        Cursor cursor = db.query(ORDERS_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+
+        return cursor;
+    }
+
+    public Cursor getUserLocation(String username){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {
+                USER_COL_LATITUDE,
+                USER_COL_LONGITUDE
+        };
+
+        // Define the WHERE clause to find the user by username
+        String selection = USER_COL_USERNAME + " = ?";
+        String[] selectionArgs = {username};
+
+        // Execute the query and return the Cursor
+        Cursor cursor = db.query(USER_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+
+        return cursor;
+    }
 }

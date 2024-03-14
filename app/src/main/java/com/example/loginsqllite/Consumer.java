@@ -16,9 +16,6 @@ import java.util.List;
 
 public class Consumer extends AppCompatActivity {
 
-    private List<ProductItem> productList;
-    List<CartItem> cartItems = new ArrayList<>();
-    private ProductAdapter productAdapter;
     private EditText searchBar;
     private static final int REQUEST_CART = 1;
 
@@ -32,10 +29,6 @@ public class Consumer extends AppCompatActivity {
         setContentView(R.layout.activity_consumer);
 
         String username = getIntent().getStringExtra("username");
-
-        // Initialize and populate the product list
-        productList = new ArrayList<>();
-        cartItems = new ArrayList<>();
 
         // Set up RecyclerView
          productListView =(ListView) findViewById(R.id.productListView);
@@ -53,7 +46,7 @@ public class Consumer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Consumer.this, Cart.class);
-                intent.putExtra("cartItems", (ArrayList<? extends Parcelable>) cartItems);
+                intent.putExtra("username", username);
                 startActivityForResult(intent, REQUEST_CART);
             }
         });

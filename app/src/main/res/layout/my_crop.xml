@@ -6,14 +6,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
+    <Button
+        android:id="@+id/buyNowButton"
+        android:layout_width="206dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="208dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="5dp"
+        android:text="Buy now"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cartProductPrice"
+        tools:ignore="TouchTargetSizeCheck" />
+
     <TextView
         android:id="@+id/cartProductName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_width="408dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="9dp"
         android:text="Product Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,39 +34,45 @@
         android:id="@+id/cartProductQuantity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="Quantity: 0"
-        app:layout_constraintTop_toBottomOf="@+id/cartProductName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/cartFarmerName" />
 
     <TextView
         android:id="@+id/cartProductPrice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="Price: $0.00"
-        app:layout_constraintTop_toBottomOf="@+id/cartProductQuantity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/cartProductQuantity" />
 
     <Button
         android:id="@+id/removeButton"
-        android:layout_width="206dp"
+        android:layout_width="189dp"
         android:layout_height="37dp"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="4dp"
         android:text="Remove"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cartProductPrice"
         tools:ignore="TouchTargetSizeCheck" />
 
-    <Button
-        android:id="@+id/buyNowButton"
-        android:layout_width="206dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="208dp"
-        android:layout_marginTop="3dp"
-        android:text="Remove"
+    <TextView
+        android:id="@+id/cartFarmerName"
+        android:layout_width="0dp"
+        android:layout_height="19dp"
+        android:text="Farmer Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cartProductPrice"
-        tools:ignore="TouchTargetSizeCheck" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.283" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,15 +29,17 @@ public class Login extends AppCompatActivity {
                 String user = username.getText().toString();
                 String pass = password.getText().toString();
 
-                if(user.equals("")||pass.equals(""))
+                if(user.isEmpty() || pass.isEmpty())
                     Toast.makeText(Login.this, "Please enter all the fields", Toast.LENGTH_SHORT).show();
                 else{
-                    Boolean checkuserpass = DB.checkusernamepassword(user, pass);
-                    if(checkuserpass==true){
+                    boolean checkuserpass = DB.checkusernamepassword(user, pass);
+                    if(checkuserpass){
                         String userRole=DB.getUserRole(user);
                         if("Farmer".equals(userRole)){
-                            Intent farmerIntent=new Intent(getApplicationContext(),Farmer.class);
+                            Intent farmerIntent=new Intent(getApplicationContext(),MainActivity2.class);
+/*
                             farmerIntent.putExtra("username", user);
+*/
                             startActivity(farmerIntent);
                         } else if ("Consumer".equals(userRole)) {
                             Intent consumerIntent = new Intent(getApplicationContext(), Consumer.class);
@@ -47,11 +49,11 @@ public class Login extends AppCompatActivity {
                             Intent consumerIntent = new Intent(getApplicationContext(), Admin.class);
                             startActivity(consumerIntent);
                         }
-                        else if ("Delivery Boy".equals(userRole)) {
+                        else if ("DeliveryBoy".equals(userRole)) {
                             Intent consumerIntent = new Intent(getApplicationContext(), DeliveryBoy.class);
                             startActivity(consumerIntent);
                         }
-                        Toast.makeText(Login.this, "Sign in successfull", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Signed in successfully", Toast.LENGTH_SHORT).show();
 
                     }else{
                         Toast.makeText(Login.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();

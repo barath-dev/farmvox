@@ -1,96 +1,100 @@
 package com.example.loginsqllite;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
+public class CartAdapter extends BaseAdapter {
 
-    private List<CartItem> cartItems;
-    private Context context; // Add a Context field
+    Cursor cartItems;
+
+    private static LayoutInflater inflater = null;
+    private final Context context;
+
+    String username;
+
+    String crop_name, crop_quantity, crop_price, crop_unit, farmer_name;
+
     private CartAdapterListener cartAdapterListener;
 
-    public CartAdapter(Context context, List<CartItem> cartItems,CartAdapterListener listener) {
+    public CartAdapter(Context context, String username) {
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
-        this.cartItems = cartItems;
-        this.cartAdapterListener = listener;
+        this.username = username;
+        DBHelper db = new DBHelper(context);
+        cartItems = db.getCart(username);
+        if (cartItems.getCount() == 0) {
+            Toast.makeText(context, "No items in cart", Toast.LENGTH_SHORT).show();
+        }else if(cartItems==null){
+            Toast.makeText(context, "cursor is null", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(context, "cursor count: " + cartItems.getCount(), Toast.LENGTH_SHORT).show();
+        }
+
+
+        Toast.makeText(context, username, Toast.LENGTH_SHORT).show();
     }
 
-    @NonNull
     @Override
-    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_item, parent, false);
-        return new CartViewHolder(view);
+    public int getCount() {
+        return cartItems.getCount();
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        CartItem cartItem = cartItems.get(position);
+    public Object getItem(int position) {
+        return cartItems.getPosition();
+    }
 
-        holder.cartProductName.setText(cartItem.getProduct().getProductName());
-        holder.cartProductQuantity.setText("Quantity: " + cartItem.getQuantity());
-        holder.cartProductImage.setImageResource(cartItem.getImageResId());
-        holder.cartProductPrice.setText("Price: " + cartItem.getPrice());
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-        // Increase quantity button click listener
-        holder.plusButton.setOnClickListener(v -> {
-            cartItem.setQuantity(cartItem.getQuantity() + 1);
-            notifyItemChanged(position);
-            updateTotalPrice();
-        });
-
-        // Decrease quantity button click listener
-        holder.minusButton.setOnClickListener(v -> {
-            if (cartItem.getQuantity() > 1) {
-                cartItem.setQuantity(cartItem.getQuantity() - 1);
-                notifyItemChanged(position);
-                updateTotalPrice();
+    @SuppressLint("Range")
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View vi = convertView;
+        if (convertView == null)
+            vi = inflater.inflate(R.layout.my_crop, null);
+        cartItems.moveToPosition(position);
+        TextView cropName = (TextView) vi.findViewById(R.id.cartProductName);
+        TextView cropQuantity = (TextView) vi.findViewById(R.id.cartProductQuantity);
+        TextView cropPrice = (TextView) vi.findViewById(R.id.cartProductPrice);
+        TextView farmerName = (TextView) vi.findViewById(R.id.cartFarmerName);
+        Button deleteButton = (Button) vi.findViewById(R.id.removeButton);
+        crop_name = cartItems.getString(cartItems.getColumnIndex("cropName"));
+        crop_quantity = cartItems.getString(cartItems.getColumnIndex("quantity"));
+        crop_price = cartItems.getString(cartItems.getColumnIndex("price"));
+        crop_unit = cartItems.getString(cartItems.getColumnIndex("unit"));
+        cropName.setText(crop_name);
+        farmer_name = cartItems.getString(cartItems.getColumnIndex("fName"));
+        farmerName.setText(String.format("Farmer Name: %s", farmer_name));
+        cropQuantity.setText(String.format("Available Product Quantity: %s %s", crop_quantity, crop_unit));
+        cropPrice.setText(String.format("₹Product Price: %s per %s", crop_price, crop_unit));
+        deleteButton.setText("Remove from Cart");
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View v) {
+                DBHelper db = new DBHelper(context);
+                db.deleteCartItem(username, crop_name, crop_quantity, crop_price);
+                Toast.makeText(context, "Removed from cart", Toast.LENGTH_SHORT).show();
+                deleteButton.setText("Removed from Cart");
             }
         });
-
-        // Remove button click listener
-        holder.removeButton.setOnClickListener(v -> {
-            removeItem(position);
-        });
-    }
-    private void removeItem(int position) {
-        if (position >= 0 && position < cartItems.size()) {
-            cartItems.remove(position);
-            notifyItemRemoved(position);
-            notifyItemChanged(position);
-            updateTotalPrice();
-
-            if (context instanceof CartAdapterListener) {
-                ((CartAdapterListener) context).onCartUpdated(cartItems);
-            }
-        }
-    }
-    private void updateTotalPrice() {
-        // Calculate total price including delivery charges
-        double totalPrice = 0;
-        for (CartItem item : cartItems) {
-            totalPrice += item.getPrice() * item.getQuantity();
-        }
-
-        // Add delivery charges (e.g., $5)
-        double deliveryCharges = 5.0;
-        totalPrice += deliveryCharges;
-
-        // Update UI with the new total price
-        // Assuming you have a method in your activity to update the total price UI
-        if (context instanceof Cart) {
-            ((Cart) context).updateTotalPriceUI(totalPrice);
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return cartItems.size();
+        return vi;
     }
 }

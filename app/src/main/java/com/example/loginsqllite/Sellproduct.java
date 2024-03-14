@@ -15,13 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.database.Cursor;
 
 import java.text.DecimalFormat;
-import java.util.Random;
 
 public class Sellproduct extends AppCompatActivity {
-    private Spinner productSpinner;
-    private EditText quantityText;
+    private Spinner productSpinner, unitSpinner;
+    private EditText quantityText,priceTextView;
     private Button submitButton;
-    private TextView priceTextView;
     private CheckBox agreeCheckBox;
 
     @Override
@@ -33,13 +31,18 @@ public class Sellproduct extends AppCompatActivity {
         productSpinner = findViewById(R.id.product_spinner);
         quantityText = findViewById(R.id.quantity_text);
         submitButton = findViewById(R.id.submit_button);
-        priceTextView = findViewById(R.id.price_text);
+        priceTextView = findViewById(R.id.pricePerUnit);
+        unitSpinner = findViewById(R.id.unit_spinner);
         agreeCheckBox = findViewById(R.id.agree_checkbox);
         DBHelper dbHelper = new DBHelper(this);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.products_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productSpinner.setAdapter(adapter);
+
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.unit_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unitSpinner.setAdapter(adapter1);
 
         productSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -49,7 +52,7 @@ public class Sellproduct extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                priceTextView.setText("Price: ₹0.00");
+                priceTextView.setVisibility(View.GONE);
             }
         });
 
@@ -59,7 +62,6 @@ public class Sellproduct extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Toast.makeText(Sellproduct.this, "Quantity changed: " + s.toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -71,13 +73,13 @@ public class Sellproduct extends AppCompatActivity {
             public void onClick(View view) {
                 if (agreeCheckBox.isChecked()) {
                     String selectedProduct = productSpinner.getSelectedItem().toString();
+                    String selectedUnit = unitSpinner.getSelectedItem().toString();
                     int quantity = Integer.parseInt(quantityText.getText().toString());
+                    int price = Integer.parseInt(priceTextView.getText().toString());
                     // Use PriceCalculator to get market price per kg asynchronously
 
                             // Calculate the price based on market price and quantity
                             /*double price = calculatePrice(marketPricePerKg, quantity);*/
-                            Random random = new Random();
-                            double price  = random.nextDouble()*100;
 
                             Cursor userDetailsCursor = dbHelper.getuserdetails(username);
 
@@ -91,10 +93,11 @@ public class Sellproduct extends AppCompatActivity {
                                 double longitude = Double.parseDouble(longitudeString);
 
                                 // Insert product details into the product database
-                                boolean productInserted = dbHelper.insertproductdata(username, password, role, latitude, longitude, selectedProduct, price, quantity);
+                                boolean productInserted = dbHelper.insertproductdata(username, latitude, longitude, selectedProduct, selectedUnit,price, quantity);
 
                                 if (productInserted) {
                                     Toast.makeText(Sellproduct.this, "Data submitted successfully", Toast.LENGTH_SHORT).show();
+                                    finish();
                                 } else {
                                     Toast.makeText(Sellproduct.this, "Failed to submit data", Toast.LENGTH_SHORT).show();
                                 }
@@ -119,11 +122,17 @@ public class Sellproduct extends AppCompatActivity {
         Spinner productSpinner = findViewById(R.id.product_spinner);
         String selectedProduct = productSpinner.getSelectedItem().toString();
         String quantityTextValue = quantityText.getText().toString();
+        String priceTextValue = priceTextView.getText().toString();
+
         int quantity = 0;
-        TextView priceTextView = findViewById(R.id.price_text);
 
         if (quantityTextValue.isEmpty()) {
-            priceTextView.setText("Please enter a quantity.");
+            Toast.makeText(this,  "Quantity field should not be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (priceTextValue.isEmpty()) {
+            Toast.makeText(this,  "Price field should not be empty", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -132,24 +141,5 @@ public class Sellproduct extends AppCompatActivity {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-
-        // Use PriceCalculator to get market price per kg asynchronously
-        int finalQuantity = quantity;
-        PriceCalculator.getMarketPricePerKg(selectedProduct, new PriceCalculator.PriceCallback() {
-            @Override
-            public void onPriceReceived(double marketPricePerKg) {
-                // Calculate the price based on market price and quantity
-                double price = calculatePrice(marketPricePerKg, finalQuantity);
-
-                DecimalFormat decimalFormat = new DecimalFormat("#.##");
-                String priceText = "Price: ₹" + decimalFormat.format(price);
-                priceTextView.setText(priceText);
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                Toast.makeText(Sellproduct.this, "Error fetching market price: " + errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }
