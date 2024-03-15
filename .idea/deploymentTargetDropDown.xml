@@ -5,6 +5,9 @@
       <entry key="LocationPicker">
         <State />
       </entry>
+      <entry key="Navigation">
+        <State />
+      </entry>
       <entry key="app">
         <State>
           <targetSelectedWithDropDown>

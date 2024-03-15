@@ -1,11 +1,16 @@
 package com.example.loginsqllite;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String USER_DATABASE_NAME = "User.db";
@@ -78,6 +83,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String ORDER_COL_F_NAME = "farmer_name";
     private static final String ORDER_COL_PRODUCT_UNIT = "unit";
 
+    private static  final String TEM_TABLE_NAME = "tem";
+
 
     public DBHelper(Context context) {
         super(context, USER_DATABASE_NAME, null, USER_DATABASE_VERSION);
@@ -99,11 +106,19 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create Table " + CART_TABLE_NAME + " (" + CART_COL_USERNAME + " TEXT, " + CART_COL_PRODUCT_NAME + " TEXT, " + CART_COL_PRODUCT_PRICE + " REAL, " + CART_COL_FARMER_NAME + " TEXT, " + CART_COL_PRODUCT_UNIT + " REAL, " + CART_COL_PRODUCT_QUANTITY + " INTEGER)");
 
         db.execSQL("create Table " + DISPATCHERS_TABLE_NAME + " (" + DISPATCHERS_COL_USERNAME + " TEXT primary key, " + DISPATCHERS_COL_LATITUDE + " REAL, " + DISPATCHERS_COL_LONGITUDE + " REAL, " + DISPATCHERS_COL_CURRENT_ORDER + " TEXT, " + DISPATCHERS_COL_STATUS + " TEXT, " + DISPATCHERS_COL_DELIVERY_COUNT + " INTEGER)");
+
+        db.execSQL("create Table " + TEM_TABLE_NAME + " (" + ORDER_COL_USERNAME + " TEXT, " + ORDER_COL_LATITUDE_PICKUP + " REAL, " + ORDER_COL_LONGITUDE_PICKUP + " REAL, " + ORDER_COL_LATITUDE_DEST + " REAL, " + ORDER_COL_LONGITUDE_DEST + " REAL, " + ORDER_COL_PRODUCT_PRICE + " REAL, " + ORDER_COL_PRODUCT_QUANTITY + " INTEGER, " + ORDER_COL_F_NAME + " TEXT, " + ORDER_COL_PRODUCT_NAME + " TEXT, " + ORDER_COL_PRODUCT_UNIT + " TEXT)");
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public void clearTEM(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + TEM_TABLE_NAME);
     }
 
 
@@ -247,6 +262,34 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(ORDER_COL_PRODUCT_NAME,cropName);
         contentValues.put(ORDER_COL_PRODUCT_UNIT,unit);
         long result = db.insert(ORDERS_TABLE_NAME, null, contentValues);
+        return result != -1;
+    }
+
+    public boolean createCheckOut(
+            String username,
+            double latitude_dest,
+            double longitude_dest,
+            double latitude_source,
+            double longitude_source,
+            double price,
+            String farmerName,
+            int quantity,
+            String cropName,
+            String unit) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ORDER_COL_USERNAME, username);
+        contentValues.put(ORDER_COL_LATITUDE_PICKUP, latitude_source);
+        contentValues.put(ORDER_COL_LONGITUDE_PICKUP, longitude_source);
+        contentValues.put(ORDER_COL_LATITUDE_DEST, latitude_dest);
+        contentValues.put(ORDER_COL_LONGITUDE_DEST, longitude_dest);
+        contentValues.put(ORDER_COL_PRODUCT_PRICE, price);
+        contentValues.put(ORDER_COL_PRODUCT_QUANTITY, quantity);
+        contentValues.put(ORDER_COL_F_NAME,farmerName);
+        contentValues.put(ORDER_COL_PRODUCT_NAME,cropName);
+        contentValues.put(ORDER_COL_PRODUCT_UNIT,unit);
+        long result = db.insert(TEM_TABLE_NAME, null, contentValues);
         return result != -1;
     }
 
@@ -495,7 +538,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getUserLocation(String username){
+    public LatLng getUserLocation(String username){
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Define the columns you want to retrieve
@@ -511,6 +554,123 @@ public class DBHelper extends SQLiteOpenHelper {
         // Execute the query and return the Cursor
         Cursor cursor = db.query(USER_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
 
+
+        if(cursor != null){
+            cursor.moveToFirst();
+            @SuppressLint("Range") double latitude = cursor.getDouble(cursor.getColumnIndex(USER_COL_LATITUDE));
+            @SuppressLint("Range") double longitude = cursor.getDouble(cursor.getColumnIndex(USER_COL_LONGITUDE));
+            return new LatLng(latitude,longitude);
+        }else{
+            return null;
+        }
+    }
+
+    public ArrayList<LatLng> getAllFarmerLocations(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {
+                USER_COL_LATITUDE,
+                USER_COL_LONGITUDE
+        };
+
+
+        String selection = USER_COL_ROLE + " = ?";
+
+        String[] selectionArgs = {"Farmer"};
+
+        // Execute the query and return the Cursor
+        Cursor cursor = db.query(USER_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+
+        ArrayList<LatLng> farmerLocations = new ArrayList<>();
+
+        if(cursor != null){
+            while(cursor.moveToNext()){
+                @SuppressLint("Range") double latitude = cursor.getDouble(cursor.getColumnIndex(USER_COL_LATITUDE));
+                @SuppressLint("Range") double longitude = cursor.getDouble(cursor.getColumnIndex(USER_COL_LONGITUDE));
+                LatLng latLng = new LatLng(latitude,longitude);
+                farmerLocations.add(latLng);
+            }
+        }
+        return farmerLocations;
+    }
+
+    public ArrayList<String> getAllUsernames() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {
+                USER_COL_USERNAME
+        };
+
+
+        // Execute the query and return the Cursor
+        Cursor cursor = db.query(USER_TABLE_NAME, columns, null, null, null, null, null);
+
+        ArrayList<String> usernames = new ArrayList<>();
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex(USER_COL_USERNAME));
+                usernames.add(username);
+            }
+        }
+        return usernames;
+    }
+
+    public Cursor getAllProductsForFarmer(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {
+                PRODUCT_COL_USERNAME,
+                PRODUCT_COL_LATITUDE,
+                PRODUCT_COL_LONGITUDE,
+                PRODUCT_COL_PRODUCT_NAME,
+                PRODUCT_COL_PRODUCT_PRICE,
+                PRODUCT_COL_PRODUCT_QUANTITY,
+                PRODUCT_COL_PRODUCT_UNIT
+        };
+
+        // Define the WHERE clause to find the user by username
+        String selection = PRODUCT_COL_USERNAME + " = ?";
+        String[] selectionArgs = {username};
+
+        // Execute the query and return the Cursor
+        Cursor cursor = db.query(PRODUCT_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+
         return cursor;
+    }
+
+    public boolean isFarmer(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + USER_TABLE_NAME + " WHERE " + USER_COL_USERNAME + " = ? AND " + USER_COL_ROLE + " = ?", new String[]{username, "Farmer"});
+        return cursor.getCount() > 0;
+    }
+
+    public  Cursor getTEM(String username){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {
+                ORDER_COL_USERNAME,
+                ORDER_COL_LATITUDE_PICKUP,
+                ORDER_COL_LONGITUDE_PICKUP,
+                ORDER_COL_LATITUDE_DEST,
+                ORDER_COL_LONGITUDE_DEST,
+                ORDER_COL_PRODUCT_PRICE,
+                ORDER_COL_PRODUCT_QUANTITY,
+                ORDER_COL_F_NAME,
+                ORDER_COL_PRODUCT_UNIT,
+                ORDER_COL_PRODUCT_NAME
+        };
+
+        // Define the WHERE clause to find the user by username
+        String selection = PRODUCT_COL_USERNAME + " = ?";
+        String[] selectionArgs = {username};
+
+        // Execute the query and return the Cursor
+
+        return db.query(TEM_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
     }
 }

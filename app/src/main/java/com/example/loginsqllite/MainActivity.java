@@ -72,17 +72,17 @@ public class MainActivity extends AppCompatActivity {
                 String repass = repassword.getText().toString();
                 String selectedRole = roleSpinner.getSelectedItem().toString();
 
-                if (user.equals("") || pass.equals("") || repass.equals(""))
+                if (user.isEmpty() || pass.isEmpty() || repass.isEmpty())
                     Toast.makeText(MainActivity.this, "Please enter all the fields", Toast.LENGTH_SHORT).show();
                 else {
                     if (pass.equals(repass)) {
-                        Boolean checkuser = DB.checkusername(user);
-                        if (checkuser == false) {
+                        boolean checkuser = DB.checkusername(user);
+                        if (!checkuser) {
                             retrieveLocation(new LocationCallback() {
                                 @Override
                                 public void onLocationReceived(double latitude, double longitude) {
-                                    Boolean insert = DB.insertuserdata(user, pass, selectedRole, latitude, longitude);
-                                    if (insert == true) {
+                                    boolean insert = DB.insertuserdata(user, pass, selectedRole, latitude, longitude-2);
+                                    if (insert) {
                                         Toast.makeText(MainActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
                                         String userRole=DB.getUserRole(user);
                                         if("Farmer".equals(userRole)){

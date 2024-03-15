@@ -33,7 +33,7 @@ public class MainActivity2 extends AppCompatActivity {
 
     LocationListener locationListener;
 
-    Cursor cursor;
+    LatLng userLocation;
 
     GoogleMap mMap;
 
@@ -60,14 +60,13 @@ public class MainActivity2 extends AppCompatActivity {
 
         DBHelper db = new DBHelper(this);
 
-        cursor = db.getuserdetails("farmer");
+        userLocation = db.getUserLocation("farmer");
 
-        Toast.makeText(this, Arrays.toString(cursor.getColumnNames()), Toast.LENGTH_SHORT).show();
 
          locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
          SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                 .findFragmentById(R.id.map);
+                 .findFragmentById(R.id.map1);
 
          mapFragment.getMapAsync(this::onMapReady);
 
@@ -80,7 +79,7 @@ public class MainActivity2 extends AppCompatActivity {
             public void onLocationChanged(@NonNull Location location) {
                 mMap.clear();
                 /*LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());*/
-                mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndexOrThrow("latitude"))),Double.parseDouble(cursor.getString(cursor.getColumnIndexOrThrow("longitude"))))).title("its me "));
+                mMap.addMarker(new MarkerOptions().position(userLocation).title("its me "));
             }
         };
 

@@ -1,20 +1,19 @@
 package com.example.loginsqllite;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Consumer extends AppCompatActivity {
+public class FarmerProfile extends AppCompatActivity {
 
     private EditText searchBar;
     private static final int REQUEST_CART = 1;
@@ -24,10 +23,10 @@ public class Consumer extends AppCompatActivity {
     boolean isFarmer = false;
 
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_consumer);
 
         String username = getIntent().getStringExtra("username");
@@ -35,8 +34,8 @@ public class Consumer extends AppCompatActivity {
         isFarmer = new DBHelper(this).isFarmer(username);
 
         // Set up RecyclerView
-         productListView =(ListView) findViewById(R.id.productListView);
-         productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer));
+        productListView =(ListView) findViewById(R.id.productListView);
+        productListView.setAdapter(new ConsumerAdapter(FarmerProfile.this, username, isFarmer));
 
 
 
@@ -49,7 +48,7 @@ public class Consumer extends AppCompatActivity {
         cartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Consumer.this, Cart.class);
+                Intent intent = new Intent(FarmerProfile.this, Cart.class);
                 intent.putExtra("username", username);
                 startActivityForResult(intent, REQUEST_CART);
             }

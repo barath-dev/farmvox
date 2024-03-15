@@ -36,10 +36,8 @@ public class Login extends AppCompatActivity {
                     if(checkuserpass){
                         String userRole=DB.getUserRole(user);
                         if("Farmer".equals(userRole)){
-                            Intent farmerIntent=new Intent(getApplicationContext(),MainActivity2.class);
-/*
+                            Intent farmerIntent=new Intent(getApplicationContext(), Farmer.class);
                             farmerIntent.putExtra("username", user);
-*/
                             startActivity(farmerIntent);
                         } else if ("Consumer".equals(userRole)) {
                             Intent consumerIntent = new Intent(getApplicationContext(), Consumer.class);
