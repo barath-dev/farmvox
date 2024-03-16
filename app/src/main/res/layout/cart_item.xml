@@ -59,7 +59,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cartProductPrice" />
 
     <Button
-        android:id="@+id/removeButton"
+        android:id="@+id/removeButtonCheckOut"
         android:layout_width="86dp"
         android:layout_height="36dp"
         android:text="Remove"

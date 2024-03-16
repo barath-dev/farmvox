@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                         callback.onLocationReceived(latitude, longitude);
                     } else {
                         Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show();
-                        double latitude =  12.0908;
+                        double latitude =  11.0908;
                         double longitude = 76.2365;
                         // Call the callback with the obtained latitude and longitude
                         callback.onLocationReceived(latitude, longitude);

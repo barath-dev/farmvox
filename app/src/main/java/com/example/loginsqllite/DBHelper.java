@@ -666,11 +666,16 @@ public class DBHelper extends SQLiteOpenHelper {
         };
 
         // Define the WHERE clause to find the user by username
-        String selection = PRODUCT_COL_USERNAME + " = ?";
+        String selection = ORDER_COL_USERNAME + " = ?";
         String[] selectionArgs = {username};
 
         // Execute the query and return the Cursor
 
         return db.query(TEM_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+    }
+
+    public void deleteTEM(String name, String quantity, String price) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + TEM_TABLE_NAME + " WHERE " + ORDER_COL_PRODUCT_NAME + " = ? AND " + ORDER_COL_PRODUCT_QUANTITY + " = ? AND " + ORDER_COL_PRODUCT_PRICE + " = ?", new String[]{name, quantity, price});
     }
 }

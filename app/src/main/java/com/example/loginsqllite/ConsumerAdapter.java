@@ -69,7 +69,7 @@ public class ConsumerAdapter extends BaseAdapter {
         return position;
     }
 
-    @SuppressLint({"Range", "InflateParams"})
+    @SuppressLint({"Range", "InflateParams", "SetTextI18n"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
@@ -87,7 +87,8 @@ public class ConsumerAdapter extends BaseAdapter {
          crop_price = cursor.getString(cursor.getColumnIndex("product_price"));
          crop_unit = cursor.getString(cursor.getColumnIndex("product_unit"));
          latitude = cursor.getDouble(cursor.getColumnIndex("latitude"));
-            longitude = cursor.getDouble(cursor.getColumnIndex("longitude"));
+
+         longitude = cursor.getDouble(cursor.getColumnIndex("longitude"));
 
         cropName.setText(String.format("Product Name: %s", crop_name));
         farmer_name = cursor.getString(cursor.getColumnIndex("username"));
@@ -97,6 +98,7 @@ public class ConsumerAdapter extends BaseAdapter {
         deleteButton.setText("Add to Cart");
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 

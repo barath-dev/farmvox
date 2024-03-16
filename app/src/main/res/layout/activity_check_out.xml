@@ -19,10 +19,10 @@
 
     <ListView
         android:id="@+id/checkOutList"
-        android:layout_width="409dp"
-        android:layout_height="634dp"
+        android:layout_width="367dp"
+        android:layout_height="593dp"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
