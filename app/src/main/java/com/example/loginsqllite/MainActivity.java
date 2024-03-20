@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void retrieveLocation(LocationCallback callback) {
-            // Check for location permission explicitly before retrieving location
+            // Check for location permission explicit,lkly before retrieving location
             if (checkLocationPermission()) {
                 // Use fusedLocationClient to get the location
                 fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
                         callback.onLocationReceived(latitude, longitude);
                     } else {
                         Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show();
-                        double latitude =  11.0908;
-                        double longitude = 76.2365;
+                        double latitude =  11.0908+2;
+                        double longitude = 77.2365;
                         // Call the callback with the obtained latitude and longitude
                         callback.onLocationReceived(latitude, longitude);
                     }

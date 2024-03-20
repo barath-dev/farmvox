@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
 public class CartAdapter extends BaseAdapter {
@@ -41,7 +43,19 @@ public class CartAdapter extends BaseAdapter {
             Toast.makeText(context, "cursor is null", Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(context, "cursor count: " + cartItems.getCount(), Toast.LENGTH_SHORT).show();
+            Button checkOutButton = (Button) ((Cart) context).findViewById(R.id.placeOrder);
+            checkOutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DBHelper db = new DBHelper(context);
+                    LatLng userloc = db.getUserLocation(username);
+                    while (cartItems.moveToNext()) {
+                        @SuppressLint("Range") LatLng farmerloc = db.getUserLocation(cartItems.getString(cartItems.getColumnIndex("fName")));
+                        boolean res = db.createCheckOut(username, userloc.latitude, userloc.longitude, farmerloc.latitude, farmerloc.longitude, Double.parseDouble(crop_price), farmer_name, Integer.parseInt(crop_quantity), crop_name, crop_unit);
+                    }
+                    Toast.makeText(context, "Order Placed", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
 
@@ -63,7 +77,7 @@ public class CartAdapter extends BaseAdapter {
         return position;
     }
 
-    @SuppressLint("Range")
+    @SuppressLint({"Range", "SetTextI18n"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;

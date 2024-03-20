@@ -117,7 +117,6 @@ public class ConsumerAdapter extends BaseAdapter {
                     if(res){
                         Intent intent = new Intent(context,CheckOut.class);
                         intent.putExtra("username",username);
-                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
                         context.startActivity(intent);
                     }else{
                         Toast.makeText(context, "Order Failed", Toast.LENGTH_SHORT).show();

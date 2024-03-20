@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -37,6 +38,15 @@ public class Consumer extends AppCompatActivity {
         // Set up RecyclerView
          productListView =(ListView) findViewById(R.id.productListView);
          productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer));
+
+         Button map = findViewById(R.id.mapButton);
+            map.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Consumer.this, MapsActivity.class);
+                    startActivity(intent);
+                }
+            });
 
 
 
