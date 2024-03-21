@@ -5,27 +5,29 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CheckOut">
-
-    <Button
-        android:id="@+id/confirmCheckout"
-        android:layout_width="267dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="636dp"
-        android:text="Confirm Checkout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".History">
 
     <ListView
-        android:id="@+id/checkOutList"
-        android:layout_width="360dp"
-        android:layout_height="548dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="46dp"
-        android:layout_marginEnd="1dp"
+        android:id="@+id/historyList"
+        android:layout_width="350dp"
+        android:layout_height="521dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+
+        android:id="@+id/textView6"
+        android:layout_width="177dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="17dp"
+        android:text="Order History"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/historyList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

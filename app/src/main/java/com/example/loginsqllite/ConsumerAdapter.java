@@ -102,8 +102,7 @@ public class ConsumerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                   String res =  db.createCart(username, crop_name, crop_quantity, crop_price, crop_unit, farmer_name);
-                    Toast.makeText(context, latitude.toString(), Toast.LENGTH_SHORT).show();
+                   db.createCart(username, crop_name, crop_quantity, crop_price, crop_unit, farmer_name);
 
                 deleteButton.setText("Added to Cart");
             }

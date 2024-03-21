@@ -44,7 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-
          ArrayList<LatLng> userLocations = DB.getAllFarmerLocations();
          ArrayList<String> usernames = DB.getAllUsernames();
 

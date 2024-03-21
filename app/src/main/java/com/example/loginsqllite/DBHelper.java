@@ -44,7 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ORDERS_COL_DELIERYBOY = "deliveryBoy";
 
     public static final String ORDER_COL_USERNAME = "username";
-    public static final String ORDER_COL_ROLE = "role";
+    public static final String ORDER_COL_DELIVERY_BOY = "delivery_boy";
     public static final String ORDER_COL_LATITUDE_PICKUP = "latitude_pickup";
     public static final String ORDER_COL_LONGITUDE_PICKUP = "longitude_pickup";
     public static final String ORDER_COL_LATITUDE_DEST = "latitude_dest";
@@ -103,7 +103,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create Table " + PRODUCT_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT, "  + PRODUCT_COL_LATITUDE + " REAL, " + PRODUCT_COL_LONGITUDE + " REAL, " + PRODUCT_COL_PRODUCT_NAME + " TEXT, "+ PRODUCT_COL_PRODUCT_UNIT + " TEXT, " + PRODUCT_COL_PRODUCT_PRICE + " REAL, " + PRODUCT_COL_PRODUCT_QUANTITY + " INTEGER)");
 
         // Create the orders table with updated columns
-        db.execSQL("create Table " + ORDERS_TABLE_NAME + " (" + ORDER_COL_USERNAME + " TEXT, " + ORDER_COL_LATITUDE_PICKUP + " REAL, " + ORDER_COL_LONGITUDE_PICKUP + " REAL, " + ORDER_COL_LATITUDE_DEST + " REAL, " + ORDER_COL_LONGITUDE_DEST + " REAL, " + ORDER_COL_PRODUCT_PRICE + " REAL, " + ORDER_COL_PRODUCT_QUANTITY + " INTEGER, " + ORDER_COL_F_NAME + " TEXT, " + ORDER_COL_ID + " TEXT, "+ ORDER_COL_PRODUCT_NAME + " TEXT, " + ORDER_COL_PRODUCT_UNIT + " TEXT)");
+        db.execSQL("create Table " + ORDERS_TABLE_NAME + " (" + ORDER_COL_USERNAME + " TEXT, " + ORDER_COL_LATITUDE_PICKUP + " REAL, " + ORDER_COL_LONGITUDE_PICKUP + " REAL, " + ORDER_COL_LATITUDE_DEST + " REAL, " + ORDER_COL_LONGITUDE_DEST + " REAL, " + ORDER_COL_PRODUCT_PRICE + " REAL, " + ORDER_COL_PRODUCT_QUANTITY + " INTEGER, " + ORDER_COL_F_NAME + " TEXT, " + ORDER_COL_ID + " TEXT, "+ ORDERS_COL_DELIERYBOY + " TEXT, " + ORDER_COL_PRODUCT_NAME + " TEXT, " + ORDER_COL_PRODUCT_UNIT + " TEXT)");
 
         db.execSQL("create Table " + CART_TABLE_NAME + " (" + CART_COL_USERNAME + " TEXT, " + CART_COL_PRODUCT_NAME + " TEXT, " + CART_COL_PRODUCT_PRICE + " REAL, " + CART_COL_FARMER_NAME + " TEXT, " + CART_COL_PRODUCT_UNIT + " REAL, " + CART_COL_PRODUCT_QUANTITY + " INTEGER)");
 
@@ -245,6 +245,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(ORDER_COL_F_NAME,farmerName);
         contentValues.put(ORDER_COL_PRODUCT_NAME,cropName);
         contentValues.put(ORDER_COL_PRODUCT_UNIT,unit);
+        contentValues.put(ORDER_COL_ID,oid);
         long result = db.insert(ORDERS_TABLE_NAME, null, contentValues);
         return result != -1;
     }
@@ -561,5 +562,20 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteTEM(String name, String quantity, String price) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TEM_TABLE_NAME + " WHERE " + ORDER_COL_PRODUCT_NAME + " = ? AND " + ORDER_COL_PRODUCT_QUANTITY + " = ? AND " + ORDER_COL_PRODUCT_PRICE + " = ?", new String[]{name, quantity, price});
+    }
+
+    public void createDispatcher(String username, double latitude, double longitude) {
+        if (latitude == 0.0 && longitude == 0.0) {
+            return;
+        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DISPATCHERS_COL_USERNAME, username);
+        contentValues.put(DISPATCHERS_COL_LATITUDE, latitude);
+        contentValues.put(DISPATCHERS_COL_LONGITUDE, longitude);
+        contentValues.put(DISPATCHERS_COL_STATUS, "Available");
+        contentValues.put(DISPATCHERS_COL_DELIVERY_COUNT, 0);
+        contentValues.put(DISPATCHERS_COL_CURRENT_ORDER_ID, "0");
+        long result = db.insert(DISPATCHERS_TABLE_NAME, null, contentValues);
     }
 }

@@ -95,13 +95,13 @@ public class MainActivity extends AppCompatActivity {
                                             startActivity(consumerIntent);
                                         } else if ("Admin".equals(userRole)) {
                                             Intent admin = new Intent(getApplicationContext(), MapsActivity.class);
-                                            //send coordinates to admin activity
                                            admin.putExtra("username", user);
                                             startActivity(admin);
                                         }
                                         else if ("DeliveryBoy".equals(userRole)) {
                                             DBHelper db = new DBHelper(getApplicationContext());
                                             db.createDeliveryBoy(user);
+                                            db.createDispatcher(user,latitude,longitude);
                                             Intent consumerIntent = new Intent(getApplicationContext(), DeliveryBoy.class);
                                             startActivity(consumerIntent);
                                         }
@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
                         callback.onLocationReceived(latitude, longitude);
                     } else {
                         Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show();
-                        double latitude =  11.0908+2;
-                        double longitude = 77.2365;
+                        double latitude =  11.0908;
+                        double longitude = 77.2365+1;
                         // Call the callback with the obtained latitude and longitude
                         callback.onLocationReceived(latitude, longitude);
                     }

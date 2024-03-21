@@ -6,20 +6,15 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationRequest;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -65,9 +60,7 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkLocationPermission();
-        }
+        checkLocationPermission();
         // Initializing
         MarkerPoints = new ArrayList<>();
 
@@ -91,15 +84,9 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
         mMap = googleMap;
 
         //Initialize Google Play Services
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                buildGoogleApiClient();
-                mMap.setMyLocationEnabled(true);
-            }
-        }
-        else {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
@@ -146,7 +133,7 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
 
                     // Getting URL to the Google Directions API
                     String url = getUrl(origin, dest);
-                    Log.d("onMapClick", url.toString());
+                    Log.d("onMapClick", url);
                     FetchUrl FetchUrl = new FetchUrl();
 
                     // Start downloading json data from Google Directions API
@@ -327,7 +314,7 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
                 mMap.addPolyline(lineOptions);
             }
             else {
-                Log.d("onPostExecute","without Polylines drawn");
+                Log.d("onPostExecute","without Poly-lines drawn");
             }
         }
     }
@@ -394,12 +381,12 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    public boolean checkLocationPermission(){
+    public void checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -424,9 +411,7 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             }
-            return false;
         } else {
-            return true;
         }
     }
 

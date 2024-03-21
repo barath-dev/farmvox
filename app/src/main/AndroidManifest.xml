@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.androidtutorialpoint.mymapsappsdirection.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -22,6 +22,12 @@
         android:theme="@style/Theme.Loginsqllite"
         tools1:ignore="UnusedAttribute"
         tools:targetApi="31">
+        <activity
+            android:name=".History"
+            android:exported="false" />
+        <activity
+            android:name=".order"
+            android:exported="false" />
         <activity
             android:name=".Navigation"
             android:exported="false" />
