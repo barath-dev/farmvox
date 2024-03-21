@@ -1,6 +1,7 @@
 package com.example.loginsqllite;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -20,6 +21,11 @@ public class Order extends AppCompatActivity {
 
         Button history = findViewById(R.id.historyOrder);
         Button currentOrder = findViewById(R.id.CurrentOrder);
+
+        DBHelper db = new DBHelper(this);
+        String username = getIntent().getStringExtra("username");
+        String status = getIntent().getStringExtra("status");
+        Cursor cursor = db.getOrders(username,status);
         history.setOnClickListener(v -> {
             Intent intent = new Intent(Order.this, History.class);
             startActivity(intent);

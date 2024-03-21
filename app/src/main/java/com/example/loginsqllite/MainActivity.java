@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     Button signup, signin;
     DBHelper DB;
     Spinner roleSpinner;
+
     private FusedLocationProviderClient fusedLocationClient;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 123;
     @Override
@@ -100,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         else if ("DeliveryBoy".equals(userRole)) {
                                             DBHelper db = new DBHelper(getApplicationContext());
-                                            db.createDeliveryBoy(user);
                                             db.createDispatcher(user,latitude,longitude);
                                             Intent consumerIntent = new Intent(getApplicationContext(), DeliveryBoy.class);
                                             startActivity(consumerIntent);
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show();
                         double latitude =  11.0908;
-                        double longitude = 77.2365+1;
+                        double longitude = 77.2365+2;
                         // Call the callback with the obtained latitude and longitude
                         callback.onLocationReceived(latitude, longitude);
                     }

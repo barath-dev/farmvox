@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,9 +34,11 @@ public class FarmerProfile extends AppCompatActivity {
 
         isFarmer = new DBHelper(this).isFarmer(username);
 
-        // Set up RecyclerView
         productListView =(ListView) findViewById(R.id.productListView);
         productListView.setAdapter(new ConsumerAdapter(FarmerProfile.this, username, isFarmer));
+
+        TextView textView = findViewById(R.id.farmersProfile);
+        textView.setVisibility(View.VISIBLE);
 
 
 

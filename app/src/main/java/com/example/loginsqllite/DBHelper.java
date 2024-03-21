@@ -11,6 +11,8 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -103,7 +105,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create Table " + PRODUCT_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT, "  + PRODUCT_COL_LATITUDE + " REAL, " + PRODUCT_COL_LONGITUDE + " REAL, " + PRODUCT_COL_PRODUCT_NAME + " TEXT, "+ PRODUCT_COL_PRODUCT_UNIT + " TEXT, " + PRODUCT_COL_PRODUCT_PRICE + " REAL, " + PRODUCT_COL_PRODUCT_QUANTITY + " INTEGER)");
 
         // Create the orders table with updated columns
-        db.execSQL("create Table " + ORDERS_TABLE_NAME + " (" + ORDER_COL_USERNAME + " TEXT, " + ORDER_COL_LATITUDE_PICKUP + " REAL, " + ORDER_COL_LONGITUDE_PICKUP + " REAL, " + ORDER_COL_LATITUDE_DEST + " REAL, " + ORDER_COL_LONGITUDE_DEST + " REAL, " + ORDER_COL_PRODUCT_PRICE + " REAL, " + ORDER_COL_PRODUCT_QUANTITY + " INTEGER, " + ORDER_COL_F_NAME + " TEXT, " + ORDER_COL_ID + " TEXT, "+ ORDERS_COL_DELIERYBOY + " TEXT, " + ORDER_COL_PRODUCT_NAME + " TEXT, " + ORDER_COL_PRODUCT_UNIT + " TEXT)");
+        db.execSQL("create Table " + ORDERS_TABLE_NAME + " (" + ORDER_COL_USERNAME + " TEXT, " + ORDER_COL_LATITUDE_PICKUP + " REAL, " + ORDER_COL_LONGITUDE_PICKUP + " REAL, " + ORDER_COL_LATITUDE_DEST + " REAL, " + ORDER_COL_LONGITUDE_DEST + " REAL, " + ORDER_COL_PRODUCT_PRICE + " REAL, " + ORDER_COL_PRODUCT_QUANTITY + " INTEGER, " + ORDER_COL_F_NAME + " TEXT, " + ORDER_COL_ID + " TEXT, "+ ORDERS_COL_DELIERYBOY + " TEXT, " +DISPATCHERS_COL_STATUS + " TEXT, " + ORDER_COL_PRODUCT_NAME + " TEXT, " + ORDER_COL_PRODUCT_UNIT + " TEXT)");
 
         db.execSQL("create Table " + CART_TABLE_NAME + " (" + CART_COL_USERNAME + " TEXT, " + CART_COL_PRODUCT_NAME + " TEXT, " + CART_COL_PRODUCT_PRICE + " REAL, " + CART_COL_FARMER_NAME + " TEXT, " + CART_COL_PRODUCT_UNIT + " REAL, " + CART_COL_PRODUCT_QUANTITY + " INTEGER)");
 
@@ -414,14 +416,6 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public void createDeliveryBoy(String username) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DISPATCHERS_COL_USERNAME, username);
-        contentValues.put(DISPATCHERS_COL_STATUS, "Available");
-        contentValues.put(DISPATCHERS_COL_DELIVERY_COUNT, 0);
-        long result = db.insert(DISPATCHERS_TABLE_NAME, null, contentValues);
-    }
 
     public LatLng getUserLocation(String username){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -564,7 +558,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("delete from " + TEM_TABLE_NAME + " WHERE " + ORDER_COL_PRODUCT_NAME + " = ? AND " + ORDER_COL_PRODUCT_QUANTITY + " = ? AND " + ORDER_COL_PRODUCT_PRICE + " = ?", new String[]{name, quantity, price});
     }
 
-    public void createDispatcher(String username, double latitude, double longitude) {
+    public void createDispatcher(String username, @NotNull double latitude,@NotNull double longitude) {
         if (latitude == 0.0 && longitude == 0.0) {
             return;
         }
@@ -577,5 +571,31 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(DISPATCHERS_COL_DELIVERY_COUNT, 0);
         contentValues.put(DISPATCHERS_COL_CURRENT_ORDER_ID, "0");
         long result = db.insert(DISPATCHERS_TABLE_NAME, null, contentValues);
+    }
+
+    public Cursor getOrders(String username, String status) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {
+                ORDER_COL_USERNAME,
+                ORDER_COL_LATITUDE_PICKUP,
+                ORDER_COL_LONGITUDE_PICKUP,
+                ORDER_COL_LATITUDE_DEST,
+                ORDER_COL_LONGITUDE_DEST,
+                ORDER_COL_PRODUCT_PRICE,
+                ORDER_COL_PRODUCT_QUANTITY,
+                ORDER_COL_F_NAME,
+                ORDER_COL_PRODUCT_UNIT,
+                ORDER_COL_PRODUCT_NAME
+        };
+
+        // Define the WHERE clause to find the user by username
+        String selection = ORDER_COL_USERNAME + " = ? AND " + ORDERS_COL_DELIERYBOY + " = ?";
+        String[] selectionArgs = {username};
+
+        // Execute the query and return the Cursor
+
+        return db.query(ORDERS_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
     }
 }

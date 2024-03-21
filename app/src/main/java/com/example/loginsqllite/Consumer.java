@@ -17,7 +17,6 @@ import java.util.List;
 
 public class Consumer extends AppCompatActivity {
 
-    private EditText searchBar;
     private static final int REQUEST_CART = 1;
 
     ListView productListView;
@@ -49,11 +48,8 @@ public class Consumer extends AppCompatActivity {
             });
 
 
+        EditText searchBar = findViewById(R.id.searchBar);
 
-        // Set up search bar
-        searchBar = findViewById(R.id.searchBar);
-
-        // Set up search button click listener
         ImageButton searchButton = findViewById(R.id.searchButton);
         ImageButton cartButton = findViewById(R.id.cartButton);
         cartButton.setOnClickListener(new View.OnClickListener() {

@@ -4,6 +4,7 @@ package com.example.loginsqllite;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,8 +24,10 @@ public class DeliveryBoy extends AppCompatActivity {
         pastOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(DeliveryBoy.this, PastOrders.class);
-                //startActivity(intent);
+                Intent intent = new Intent(DeliveryBoy.this, Order.class);
+                intent.putExtra("status", "delivered");
+                intent.putExtra("username", getIntent().getStringExtra("username"));
+                startActivity(intent);
             }
         });
 
