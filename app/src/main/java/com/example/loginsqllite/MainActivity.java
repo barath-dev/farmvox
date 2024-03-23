@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                                             DBHelper db = new DBHelper(getApplicationContext());
                                             db.createDispatcher(user,latitude,longitude);
                                             Intent consumerIntent = new Intent(getApplicationContext(), DeliveryBoy.class);
+                                            consumerIntent.putExtra("username", user);
                                             startActivity(consumerIntent);
                                         }
                                     } else {

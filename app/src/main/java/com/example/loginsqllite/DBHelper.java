@@ -559,9 +559,6 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void createDispatcher(String username, @NotNull double latitude,@NotNull double longitude) {
-        if (latitude == 0.0 && longitude == 0.0) {
-            return;
-        }
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DISPATCHERS_COL_USERNAME, username);
@@ -587,15 +584,38 @@ public class DBHelper extends SQLiteOpenHelper {
                 ORDER_COL_PRODUCT_QUANTITY,
                 ORDER_COL_F_NAME,
                 ORDER_COL_PRODUCT_UNIT,
-                ORDER_COL_PRODUCT_NAME
+                ORDER_COL_PRODUCT_NAME,
+                DISPATCHERS_COL_STATUS
         };
 
         // Define the WHERE clause to find the user by username
-        String selection = ORDER_COL_USERNAME + " = ? AND " + ORDERS_COL_DELIERYBOY + " = ?";
+        String selection = ORDER_COL_USERNAME + " = ?";
         String[] selectionArgs = {username};
 
-        // Execute the query and return the Cursor
 
         return db.query(ORDERS_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+    }
+
+    public ArrayList<String> getVegetables(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] columns= {
+          PRODUCT_COL_PRODUCT_NAME
+        };
+
+        Cursor cursor = db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, null);
+
+        ArrayList<String> vegetables = new ArrayList<>();
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex(PRODUCT_TABLE_NAME));
+                if(!vegetables.contains(username)){
+                    vegetables.add(username);
+                }
+            }
+        }
+        return vegetables;
+
     }
 }

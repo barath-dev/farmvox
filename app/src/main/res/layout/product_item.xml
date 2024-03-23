@@ -49,12 +49,14 @@
 
         <!-- Button for adding to cart -->
         <Button
-            android:id="@+id/addButton"
+            android:id="@+id/changeStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/productQuantityTextView"
-            android:layout_marginTop="8dp"
-            android:text="Add to Cart" />
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="149dp"
+            android:layout_marginTop="4dp"
+            android:text="Pick up" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

@@ -31,12 +31,13 @@ public class Consumer extends AppCompatActivity {
         setContentView(R.layout.activity_consumer);
 
         String username = getIntent().getStringExtra("username");
+        String vegetable  = getIntent().getStringExtra("vegetable");
 
         isFarmer = new DBHelper(this).isFarmer(username);
 
         // Set up RecyclerView
          productListView =(ListView) findViewById(R.id.productListView);
-         productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer));
+         productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer,vegetable));
 
          Button map = findViewById(R.id.mapButton);
             map.setOnClickListener(new View.OnClickListener() {

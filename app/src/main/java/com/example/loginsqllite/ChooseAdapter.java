@@ -6,30 +6,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.util.ArrayList;
 
-
-public class OrderAdapter extends BaseAdapter {
+public class ChooseAdapter extends BaseAdapter {
     Cursor cursor;
+
     DBHelper db;
-    String username;
 
-    public OrderAdapter (Context context, String username, String status){
+    ArrayList<String> vegetables;
 
+    Context context;
+
+    public ChooseAdapter(Context context, String username){
+        this.context = context;
+        db = new DBHelper(context);
+        vegetables = db.getVegetables();
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return vegetables.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return vegetables.get(position-1);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override

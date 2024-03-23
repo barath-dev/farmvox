@@ -7,32 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".Order">
 
-    <Button
-        android:id="@+id/CurrentOrder"
-        android:layout_width="188dp"
-        android:layout_height="199dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="9dp"
-        android:text="Present Delivery"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/historyOrder"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.406" />
-
-    <Button
-        android:id="@+id/historyOrder"
-        android:layout_width="182dp"
-        android:layout_height="199dp"
-        android:layout_marginStart="9dp"
-        android:layout_marginEnd="16dp"
-        android:text="Delivery History"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ListView
+        android:id="@+id/orders"
+        android:layout_width="410dp"
+        android:layout_height="584dp"
+        android:layout_marginTop="101dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/CurrentOrder"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.406"
-        tools:ignore="HardcodedText" />
-
-
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

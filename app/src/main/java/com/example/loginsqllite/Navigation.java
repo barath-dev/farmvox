@@ -112,10 +112,7 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
                 // Setting the position of the marker
                 options.position(point);
 
-                /**
-                 * For the start location, the color of marker is GREEN and
-                 * for the end location, the color of marker is RED.
-                 */
+
                 if (MarkerPoints.size() == 1) {
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 } else if (MarkerPoints.size() == 2) {
@@ -167,7 +164,7 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
         String output = "json";
 
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
 
 
         return url;

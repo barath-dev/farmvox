@@ -43,12 +43,11 @@ public class ConsumerAdapter extends BaseAdapter {
 
     LatLng user_loc;
 
-    public ConsumerAdapter(Context context, String username, boolean isFarmer) {
+    public ConsumerAdapter(Context context, String username, boolean isFarmer, String vegetable) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
          db = new DBHelper(context);
         this.username = username;
-        Toast.makeText(context, String.valueOf(isFarmer), Toast.LENGTH_SHORT).show();
         cursor =  !isFarmer?db.getAllProducts():db.getAllProductsForFarmer(username);
         user_loc = db.getUserLocation(username);
     }
