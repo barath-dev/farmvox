@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Sellproduct">
+    tools:context=".MarkerPrices"
+    android:background="@drawable/admin">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,22 +15,22 @@
         android:gravity="center">
 
         <Spinner
-            android:id="@+id/product_spinner"
-            android:layout_width="match_parent"
+            android:id="@+id/marketItemsSpinner"
+            android:layout_width="364dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:hint="Select Crop"
-            android:textColorHint="#757575"
-            android:layout_marginBottom="20dp" />
+            android:textColorHint="#757575" />
 
         <!-- Quantity Input Field -->
         <EditText
-            android:id="@+id/quantity_text"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Quantity"
+            android:id="@+id/minPrice"
+            android:layout_width="368dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:hint="Minumum Price per Unit"
             android:inputType="number"
-            android:textColorHint="#757575"
-            android:layout_marginBottom="20dp" />
+            android:textColorHint="#757575" />
 
 
         <!-- TextView to Display Price -->
@@ -37,36 +38,22 @@
 
         <!-- Checkbox for Agreement -->
         <EditText
-            android:id="@+id/pricePerUnit"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:id="@+id/maxPrice"
+            android:layout_width="372dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:hint="Price per Kg"
+            android:hint="Maximum Price per Unit"
             android:inputType="number"
             android:textColorHint="#757575" />
-
-        <TextView
-            android:id="@+id/priceRange"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-
-        <CheckBox
-            android:id="@+id/agree_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:text="I agree to the terms and conditions"
-            android:textSize="20sp"
-            android:layout_marginTop="20dp" />
 
         <!-- Submit Button -->
 
         <Button
-            android:id="@+id/submit_button"
+            android:id="@+id/updateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Submit"
+            android:text="Update"
             android:textSize="20sp" />
 
     </LinearLayout>

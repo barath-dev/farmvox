@@ -6,10 +6,10 @@ import android.os.Parcelable;
 import java.util.Objects;
 
 public class ProductItem implements Parcelable {
-    private int imageResId;
-    private String productName;
-    private double price;
-    private String quantity;
+    private final int imageResId;
+    private final String productName;
+    private final double price;
+    private final String quantity;
 
     public ProductItem(int imageResId, String productName, double price, String quantity) {
         this.imageResId = imageResId;

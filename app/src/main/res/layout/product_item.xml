@@ -54,9 +54,19 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/productQuantityTextView"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="149dp"
+            android:layout_marginStart="53dp"
             android:layout_marginTop="4dp"
             android:text="Pick up" />
+
+        <Button
+            android:id="@+id/directions"
+            android:layout_width="216dp"
+            android:layout_height="36dp"
+            android:layout_below="@id/productQuantityTextView"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="179dp"
+            android:layout_marginTop="12dp"
+            android:text="Pick up direction" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

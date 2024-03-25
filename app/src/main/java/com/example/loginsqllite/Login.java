@@ -40,7 +40,7 @@ public class Login extends AppCompatActivity {
                             farmerIntent.putExtra("username", user);
                             startActivity(farmerIntent);
                         } else if ("Consumer".equals(userRole)) {
-                            Intent consumerIntent = new Intent(getApplicationContext(), Choose.class);
+                            Intent consumerIntent = new Intent(getApplicationContext(), Consumer.class);
                             consumerIntent.putExtra("username", user);  
                             startActivity(consumerIntent);
                         } else if ("Admin".equals(userRole)) {
@@ -49,6 +49,7 @@ public class Login extends AppCompatActivity {
                         }
                         else if ("DeliveryBoy".equals(userRole)) {
                             Intent consumerIntent = new Intent(getApplicationContext(), DeliveryBoy.class);
+                            consumerIntent.putExtra("username", user);
                             startActivity(consumerIntent);
                         }
                         Toast.makeText(Login.this, "Signed in successfully", Toast.LENGTH_SHORT).show();

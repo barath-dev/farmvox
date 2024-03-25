@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class CartItem implements Parcelable {
-    private ProductItem product;
+    private final ProductItem product;
     private int quantity;
 
     // Constructor, getters, and other methods

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddCrops"
+    android:background ="@drawable/admin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Quantity Input Field -->
+        <EditText
+            android:id="@+id/productName"
+            android:layout_width="364dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:hint="Product Name"
+            android:inputType="text"
+            android:textColorHint="#757575" />
+
+
+
+        <EditText
+            android:id="@+id/minimumPrice"
+            android:layout_width="364dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:hint="Minimum Price per Kg"
+            android:inputType="number"
+            android:textColorHint="#757575" />
+
+        <!-- Submit Button -->
+
+        <EditText
+            android:id="@+id/maximumPrice"
+            android:layout_width="370dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:hint="Maximum Price per Kg"
+            android:inputType="number"
+            android:textColorHint="#757575" />
+
+        <EditText
+            android:id="@+id/imageUrl"
+            android:layout_width="379dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:hint="Image URL"
+            android:inputType="text"
+            android:textColorHint="#757575" />
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Add Crop"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

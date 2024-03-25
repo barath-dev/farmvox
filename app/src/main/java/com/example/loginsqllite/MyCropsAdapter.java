@@ -3,6 +3,7 @@ package com.example.loginsqllite;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,7 @@ public class MyCropsAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         DBHelper db = new DBHelper(context);
         this.username = username;
-        cursor = db.getCrops(username);
+        cursor = username.equals("admin") ?db.getAllProducts():db.getCrops(username);
         Log.d("cursor count", "cursor count: "+cursor.getCount());
         Toast.makeText(context, "cursor count: "+cursor.getCount(), Toast.LENGTH_SHORT).show();
     }
@@ -60,7 +61,6 @@ public class MyCropsAdapter extends BaseAdapter {
             TextView cropPrice = (TextView) vi.findViewById(R.id.cartProductPrice);
             TextView farmerName = (TextView) vi.findViewById(R.id.cartFarmerName);
             Button buyNowButton = (Button) vi.findViewById(R.id.buyNowButton);
-            farmerName.setVisibility(View.GONE);
         Button deleteButton = (Button) vi.findViewById(R.id.removeButton);
         String crop_name = cursor.getString(cursor.getColumnIndex("product_name"));
         crop_name = "Product Name: "+crop_name;
@@ -70,10 +70,22 @@ public class MyCropsAdapter extends BaseAdapter {
         crop_price = "Product Price: ₹"+crop_price;
         String crop_unit = cursor.getString(cursor.getColumnIndex("product_unit"));
         cropName.setText(crop_name);
-        buyNowButton.setVisibility(View.GONE);
         cropQuantity.setText(crop_quantity + " " + crop_unit);
         cropPrice.setText(crop_price + " per " + crop_unit);
+        buyNowButton.setVisibility(View.GONE);
 
+        if(username.equals("admin")){
+            farmerName.setVisibility(View.VISIBLE);
+            String farmer_name = cursor.getString(cursor.getColumnIndex("username"));
+            farmer_name = "Farmer Name: "+farmer_name;
+            farmerName.setText(farmer_name);
+
+        }
+        else{
+            farmerName.setVisibility(View.GONE);
+        }
+
+        deleteButton.setText("Delete");
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override

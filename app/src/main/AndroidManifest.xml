@@ -23,6 +23,18 @@
         tools1:ignore="UnusedAttribute"
         tools:targetApi="31">
         <activity
+            android:name=".AddCrops"
+            android:exported="false" />
+        <activity
+            android:name=".MarkerPrices"
+            android:exported="false" />
+        <activity
+            android:name=".Review"
+            android:exported="false" />
+        <activity
+            android:name=".Delete"
+            android:exported="false" />
+        <activity
             android:name=".Choose"
             android:exported="false" />
         <activity

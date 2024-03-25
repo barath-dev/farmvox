@@ -53,11 +53,16 @@ public class CheckOut extends AppCompatActivity {
                      String farmerName = cursor.getString(cursor.getColumnIndex("farmer_name"));
                      String unit = cursor.getString(cursor.getColumnIndex("unit"));
 
-                    boolean res =  db.createOrder(username, lat_dest, long_dest, lat_src, long_src, Double.parseDouble(price), farmerName,Integer.parseInt(quantity),product,unit, oid);
-                    if (res){
+                     String Dboy = db.getFreeDeliveryBoy();
+
+
+                    boolean res =  db.createOrder(username, lat_dest, long_dest, lat_src, long_src, Double.parseDouble(price), farmerName,Integer.parseInt(quantity),product,unit, oid,Dboy);
+
+                    if (res && !Dboy.equals("null")){
+                        boolean res1 = db.assignOrder(Dboy,oid);
                         Toast.makeText(CheckOut.this, "Order placed", Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(CheckOut.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CheckOut.this, "No Delivery boy", Toast.LENGTH_SHORT).show();
                     }
                 }
                 db.clearTEM();

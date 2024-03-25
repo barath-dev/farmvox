@@ -37,7 +37,7 @@ public class Consumer extends AppCompatActivity {
 
         // Set up RecyclerView
          productListView =(ListView) findViewById(R.id.productListView);
-         productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer,vegetable));
+         productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer));
 
          Button map = findViewById(R.id.mapButton);
             map.setOnClickListener(new View.OnClickListener() {

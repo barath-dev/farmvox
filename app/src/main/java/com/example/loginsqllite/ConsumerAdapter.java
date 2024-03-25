@@ -3,11 +3,9 @@ package com.example.loginsqllite;
 
 
 
-import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,7 +20,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -43,7 +40,7 @@ public class ConsumerAdapter extends BaseAdapter {
 
     LatLng user_loc;
 
-    public ConsumerAdapter(Context context, String username, boolean isFarmer, String vegetable) {
+    public ConsumerAdapter(Context context, String username, boolean isFarmer) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
          db = new DBHelper(context);
@@ -93,7 +90,7 @@ public class ConsumerAdapter extends BaseAdapter {
         farmer_name = cursor.getString(cursor.getColumnIndex("username"));
         farmerName.setText(String.format("Farmer Name: %s", farmer_name));
         cropQuantity.setText(String.format("Product Quantity: %s %s", crop_quantity, crop_unit));
-        cropPrice.setText(String.format("₹Product Price: %s per %s", crop_price, crop_unit));
+        cropPrice.setText(String.format("Product Price:₹ %s per %s", crop_price, crop_unit));
         deleteButton.setText("Add to Cart");
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +108,7 @@ public class ConsumerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 try{
+                    db.clearTEM();
                     boolean res =  db.createCheckOut(username,user_loc.latitude,user_loc.longitude,latitude,longitude,Double.parseDouble(crop_price), farmer_name, Integer.parseInt(crop_quantity),crop_name,crop_unit);
                     if(res){
                         Intent intent = new Intent(context,CheckOut.class);

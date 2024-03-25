@@ -4,28 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyCrops">
+    tools:context=".MyCrops"
+    android:background="@drawable/admin">
 
     <ListView
         android:id="@+id/myCropsList"
-        android:layout_width="408dp"
-        android:layout_height="662dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="60dp"
+        android:layout_width="382dp"
+        android:layout_height="707dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="112dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="404dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="2dp"
-        android:paddingTop="14px"
-        android:text="My Crops in market"
-        android:textAlignment="center"
-        android:textSize="34sp"
-        android:typeface="sans"
+        android:id="@+id/textViewMyCrops"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="63dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

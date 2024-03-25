@@ -2,7 +2,9 @@ package com.example.loginsqllite;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.List;
+import java.util.Objects;
 
 public class CartAdapter extends BaseAdapter {
 
@@ -41,21 +41,6 @@ public class CartAdapter extends BaseAdapter {
             Toast.makeText(context, "No items in cart", Toast.LENGTH_SHORT).show();
         }else if(cartItems==null){
             Toast.makeText(context, "cursor is null", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            Button checkOutButton = (Button) ((Cart) context).findViewById(R.id.placeOrder);
-            checkOutButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DBHelper db = new DBHelper(context);
-                    LatLng userloc = db.getUserLocation(username);
-                    while (cartItems.moveToNext()) {
-                        @SuppressLint("Range") LatLng farmerloc = db.getUserLocation(cartItems.getString(cartItems.getColumnIndex("fName")));
-                        boolean res = db.createCheckOut(username, userloc.latitude, userloc.longitude, farmerloc.latitude, farmerloc.longitude, Double.parseDouble(crop_price), farmer_name, Integer.parseInt(crop_quantity), crop_name, crop_unit);
-                    }
-                    Toast.makeText(context, "Order Placed", Toast.LENGTH_SHORT).show();
-                }
-            });
         }
 
 
@@ -89,6 +74,7 @@ public class CartAdapter extends BaseAdapter {
         TextView cropPrice = (TextView) vi.findViewById(R.id.cartProductPrice);
         TextView farmerName = (TextView) vi.findViewById(R.id.cartFarmerName);
         Button deleteButton = (Button) vi.findViewById(R.id.removeButton);
+        Button buyNow = (Button) vi.findViewById(R.id.buyNowButton);
         crop_name = cartItems.getString(cartItems.getColumnIndex("cropName"));
         crop_quantity = cartItems.getString(cartItems.getColumnIndex("quantity"));
         crop_price = cartItems.getString(cartItems.getColumnIndex("price"));
@@ -97,7 +83,7 @@ public class CartAdapter extends BaseAdapter {
         farmer_name = cartItems.getString(cartItems.getColumnIndex("fName"));
         farmerName.setText(String.format("Farmer Name: %s", farmer_name));
         cropQuantity.setText(String.format("Available Product Quantity: %s %s", crop_quantity, crop_unit));
-        cropPrice.setText(String.format("₹Product Price: %s per %s", crop_price, crop_unit));
+        cropPrice.setText(String.format("Product Price:₹ %s per %s", crop_price, crop_unit));
         deleteButton.setText("Remove from Cart");
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
@@ -107,6 +93,30 @@ public class CartAdapter extends BaseAdapter {
                 db.deleteCartItem(username, crop_name, crop_quantity, crop_price);
                 Toast.makeText(context, "Removed from cart", Toast.LENGTH_SHORT).show();
                 deleteButton.setText("Removed from Cart");
+            }
+        });
+
+        buyNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    DBHelper db = new DBHelper(context);
+                    LatLng user_loc = db.getUserLocation(username);
+                    LatLng farmer_loc = db.getUserLocation(farmer_name);
+                    double latitude = farmer_loc.latitude;
+                    double longitude = farmer_loc.longitude;
+                    db.clearTEM();
+                    boolean res =  db.createCheckOut(username,user_loc.latitude,user_loc.longitude,latitude,longitude,Double.parseDouble(crop_price), farmer_name, Integer.parseInt(crop_quantity),crop_name,crop_unit);
+                    if(res){
+                        Intent intent = new Intent(context,CheckOut.class);
+                        intent.putExtra("username",username);
+                        context.startActivity(intent);
+                    }else{
+                        Toast.makeText(context, "Order Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e) {
+                    Log.i("Error", Objects.requireNonNull(e.getMessage()));
+                }
             }
         });
         return vi;

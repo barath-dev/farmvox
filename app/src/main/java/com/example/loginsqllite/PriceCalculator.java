@@ -18,7 +18,7 @@ public class PriceCalculator {
     }
 
     public static void getMarketPricePerKg(String selectedProduct, PriceCallback callback) {
-        String apiKey = "579b464db66ec23bdd0000013c36f711bac04b8d6e4069e661ea7cd1";
+        String apiKey = "579b464db66ec23bdd0000011c80a41434e74d2179262bd4d3c061d0";
         String apiUrl = "https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070";
         HttpUrl.Builder urlBuilder = HttpUrl.parse(apiUrl).newBuilder();
         urlBuilder.addQueryParameter("api-key", apiKey);

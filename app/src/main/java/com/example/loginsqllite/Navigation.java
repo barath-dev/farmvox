@@ -199,7 +199,7 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
             }
 
             data = sb.toString();
-            Log.d("downloadUrl", data.toString());
+            Log.d("downloadUrl", data);
             br.close();
 
         } catch (Exception e) {
@@ -223,7 +223,7 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
             try {
                 // Fetching the data from web service
                 data = downloadUrl(url[0]);
-                Log.d("Background Task data", data.toString());
+                Log.d("Background Task data", data);
             } catch (Exception e) {
                 Log.d("Background Task", e.toString());
             }
@@ -256,7 +256,7 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
 
             try {
                 jObject = new JSONObject(jsonData[0]);
-                Log.d("ParserTask",jsonData[0].toString());
+                Log.d("ParserTask", jsonData[0]);
                 DataParser parser = new DataParser();
                 Log.d("ParserTask", parser.toString());
 
@@ -414,7 +414,7 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
@@ -439,7 +439,6 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
-                return;
             }
 
             // other 'case' lines to check for other permissions this app might request.

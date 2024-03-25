@@ -4,6 +4,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Admin">
+    tools:context=".Admin"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="-50dp"
+    android:background="@drawable/admin">
+
+    <TextView
+        android:layout_width="288dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="140dp"
+        android:text="Admin Dashboard"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/removeAccounts"
+        android:layout_width="188dp"
+        android:layout_height="199dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="9dp"
+        android:backgroundTint="#61a5c2"
+        android:shadowColor="#61a5c2"
+        android:text="Remove Accounts"
+        android:textColorLink="#61a5c2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/removeProducts"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.406" />
+
+    <Button
+        android:id="@+id/removeProducts"
+        android:layout_width="182dp"
+        android:layout_height="199dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="#61a5c2"
+        android:text="Remove Products"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/removeAccounts"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.406" />
+
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="345dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="148dp"
+        android:backgroundTint="#7C98B3"
+        android:text="Logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/removeAccounts" />
+
+    <Button
+        android:id="@+id/marketPrices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="Market prices"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.164"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/removeAccounts"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/addProducts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Add Products"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.882"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/removeAccounts"
+        tools:ignore="HardcodedText" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

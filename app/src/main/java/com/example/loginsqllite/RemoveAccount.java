@@ -1,8 +1,11 @@
+package com.example.loginsqllite;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class FarmerProfileAdapter extends BaseAdapter {
+public class RemoveAccount extends BaseAdapter {
+
 
 
     @Override

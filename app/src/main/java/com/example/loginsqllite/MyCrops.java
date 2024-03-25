@@ -20,7 +20,7 @@ public class MyCrops extends AppCompatActivity {
         String username = getIntent().getStringExtra("username");
 
         listView = (ListView) findViewById(R.id.myCropsList);
+        assert username != null;
         listView.setAdapter(new MyCropsAdapter(MyCrops.this,username));
-
     }
 }

@@ -58,6 +58,7 @@ public class CheckOutAdapter extends BaseAdapter {
         TextView cropQuantity = (TextView) vi.findViewById(R.id.cartProductQuantity);
         TextView cropPrice = (TextView) vi.findViewById(R.id.cartProductPrice);
         ImageView cropImage = (ImageView) vi.findViewById(R.id.cartProductImage);
+
         cropImage.setVisibility(View.GONE);
         String name = cursor.getString(cursor.getColumnIndex("product_name"));
         String quantity = cursor.getString(cursor.getColumnIndex("product_quantity"));

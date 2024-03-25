@@ -19,6 +19,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText username, password, repassword;
@@ -33,12 +36,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         repassword = (EditText) findViewById(R.id.repassword);
         signup = (Button) findViewById(R.id.btnsignup);
         signin = (Button) findViewById(R.id.btnsignin);
         DB = new DBHelper(this);
+        DB.clearTEM();
         roleSpinner = findViewById(R.id.role_spinner);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -95,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                                             consumerIntent.putExtra("username", user);
                                             startActivity(consumerIntent);
                                         } else if ("Admin".equals(userRole)) {
-                                            Intent admin = new Intent(getApplicationContext(), MapsActivity.class);
+                                            Intent admin = new Intent(getApplicationContext(), Admin.class);
                                            admin.putExtra("username", user);
                                             startActivity(admin);
                                         }
@@ -138,20 +144,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void retrieveLocation(LocationCallback callback) {
-            // Check for location permission explicit,lkly before retrieving location
             if (checkLocationPermission()) {
                 // Use fusedLocationClient to get the location
                 fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                     if (location != null) {
-                        double latitude = location.getLatitude();
-                        double longitude = location.getLongitude();
+                       double latitude = 12.9716;
+                        double longitude = 77.5946;
                         // Call the callback with the obtained latitude and longitude
                         callback.onLocationReceived(latitude, longitude);
                     } else {
+/*
                         Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show();
-                        double latitude =  11.0908;
-                        double longitude = 77.2365+2;
-                        // Call the callback with the obtained latitude and longitude
+*/
+                        double latitude = 13.0827;
+                        double longitude = 80.3707;
                         callback.onLocationReceived(latitude, longitude);
                     }
                 });
