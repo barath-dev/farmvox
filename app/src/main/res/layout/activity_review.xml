@@ -7,4 +7,53 @@
     android:layout_height="match_parent"
     tools:context=".Review">
 
+    <TextView
+        android:id="@+id/textReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="178dp"
+        android:layout_marginTop="180dp"
+        android:layout_marginEnd="176dp"
+        android:text="Rate the product out of 5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/ratingSpinner"
+        android:layout_width="231dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textReview" />
+
+    <TextView
+        android:id="@+id/textDeliveryReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Rate the delivery out of 5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingSpinner" />
+
+    <Spinner
+        android:id="@+id/deliveryRatingSpinner"
+        android:layout_width="227dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDeliveryReview" />
+
+    <Button
+        android:id="@+id/reviewSubmitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deliveryRatingSpinner" />
 </androidx.constraintlayout.widget.ConstraintLayout>

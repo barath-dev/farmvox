@@ -27,8 +27,7 @@ public class Order extends AppCompatActivity {
         String username = getIntent().getStringExtra("username");
         String status = getIntent().getStringExtra("status");
 
-
-        Cursor cursor = db.getOrders(username, status);
+        Cursor cursor = db.getOrders(username, status, true);
 
         productListView =(ListView) findViewById(R.id.orders);
         productListView.setAdapter(new OrderAdapter(Order.this,cursor));

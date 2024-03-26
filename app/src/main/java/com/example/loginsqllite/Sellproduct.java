@@ -22,7 +22,6 @@ import java.text.DecimalFormat;
 public class Sellproduct extends AppCompatActivity {
     private Spinner productSpinner;
     private EditText quantityText,priceText;
-    private Button submitButton;
     private TextView priceTextView;
     private CheckBox agreeCheckBox;
 
@@ -36,7 +35,7 @@ public class Sellproduct extends AppCompatActivity {
         String username = getIntent().getStringExtra("username");
         productSpinner = findViewById(R.id.product_spinner);
         quantityText = findViewById(R.id.quantity_text);
-        submitButton = findViewById(R.id.submit_button);
+        Button submitButton = findViewById(R.id.submit_button);
         priceTextView = findViewById(R.id.priceRange);
         agreeCheckBox = findViewById(R.id.agree_checkbox);
         priceText = findViewById(R.id.pricePerUnit);

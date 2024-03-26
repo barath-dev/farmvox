@@ -13,7 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.compose.material3.TopAppBarDefaults;
 
 
 public class OrderAdapter extends BaseAdapter {
@@ -61,31 +65,49 @@ public class OrderAdapter extends BaseAdapter {
         Button updateOrder = vi.findViewById(R.id.changeStatus);
         Button viewMap = vi.findViewById(R.id.directions);
 
+
+        String status = cursor.getString(cursor.getColumnIndex("status"));
+        String order_id = cursor.getString(cursor.getColumnIndex("oid"));
+
+        ImageView cropImage = (ImageView) vi.findViewById(R.id.productImageView);
+        DBHelper db = new DBHelper(context);
+
+        String url =  db.getUrl(cursor.getString(cursor.getColumnIndex("product_name")));
+
+        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+        imageLoaderTask.execute(url);
+
+        if (status.equals("ordered")) {
+            updateOrder.setText("pick up");
+        } else if (status.equals("picked Up")) {
+            updateOrder.setText("deliver");
+            viewMap.setText("Delivery Directions");
+        } else {
+            updateOrder.setVisibility(View.GONE);
+        }
+
         updateOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String status = cursor.getString(cursor.getColumnIndex("status"));
-                String order_id = cursor.getString(cursor.getColumnIndex("order_id"));
-                if(status.equals("pending")){
-                    db.updateOrder(order_id, "accepted");
-                    Intent intent = new Intent(v.getContext(), Order.class);
-                    intent.putExtra("username", username);
-                    intent.putExtra("status", "pending");
-                    context.startActivity(intent);
-                }else if(status.equals("accepted")){
-                    db.updateOrder(order_id, "completed");
-                    Intent intent = new Intent(v.getContext(), Order.class);
-                    intent.putExtra("username", username);
-                    intent.putExtra("status", "accepted");
-                    context.startActivity(intent);
+
+                if(status.equals("ordered")){
+                    db.updateOrder(order_id, "picked Up");
+                    Toast.makeText(context, "Order Picked Up", Toast.LENGTH_SHORT).show();
+                }else if(status.equals("picked Up")){
+                    db.updateOrder(order_id, "Delivered");
+                    Toast.makeText(context, "Order Delivered", Toast.LENGTH_SHORT).show();
                 }
+
+                Intent intent = new Intent(v.getContext(), DeliveryBoy.class);
+                intent.putExtra("username", username);
+                context.startActivity(intent);
             }});
 
         viewMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), Navigation.class);
-                /*String lat_d = cursor.getString(cursor.getColumnIndex("latitude_dest"));
+                Intent intent = new Intent(context, Navigation.class);
+                String lat_d = cursor.getString(cursor.getColumnIndex("latitude_dest"));
                 String long_d = cursor.getString(cursor.getColumnIndex("longitude_dest"));
                 String lat_p = cursor.getString(cursor.getColumnIndex("latitude_pickup"));
                 String long_p =cursor.getString(cursor.getColumnIndex("longitude_pickup"));
@@ -94,7 +116,6 @@ public class OrderAdapter extends BaseAdapter {
                 intent.putExtra("dest_long",long_d);
                 intent.putExtra("pick_lat",lat_p);
                 intent.putExtra("pick_long",long_p);
-*/
                 context.startActivity(intent);
             }
         });

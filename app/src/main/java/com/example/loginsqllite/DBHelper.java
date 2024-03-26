@@ -21,20 +21,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String ORDERS_TABLE_NAME = "orders";
 
-
     public static final String CART_TABLE_NAME = "cart";
 
     public  static final String PRICES_TABLE_NAME = "prices";
 
-
-
-
-
     private static final int USER_DATABASE_VERSION = 6; // Change this version number
 
-    // Change this version number
-
-    // User database table and columns
     public static final String USER_TABLE_NAME = "users";
     public static final String USER_COL_USERNAME = "username";
     public static final String USER_COL_PASSWORD = "password";
@@ -42,16 +34,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String USER_COL_LATITUDE = "latitude";
     public static final String USER_COL_LONGITUDE = "longitude";
 
-
     public static final String PRICES_COL_PRODUCT_NAME = "product_name";
     public static final String PRICES_COL_MIN_PRICE = "min_price";
 
     public static final String PRICES_COL_MAX_PRICE = "max_price";
 
-
-
-
-    // Updated product database table and columns
     public static final String PRODUCT_TABLE_NAME = "products";
     public static final String PRODUCT_COL_USERNAME = "username";
 
@@ -102,11 +89,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String PRICES_COL_URL = "url";
 
+    public static final String PRODUCT_COL_RATING = "rating";
+
+    public static final String PRODUCT_COL_RATING_COUNT = "rating_count";
+
 
     public DBHelper(Context context) {
         super(context, USER_DATABASE_NAME, null, USER_DATABASE_VERSION);
     }
-
 
 
     @Override
@@ -114,10 +104,8 @@ public class DBHelper extends SQLiteOpenHelper {
         // Create the users table
         db.execSQL("create Table " + USER_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT primary key, " + USER_COL_PASSWORD + " TEXT, " + USER_COL_ROLE + " TEXT, " + USER_COL_LATITUDE + " REAL, " + USER_COL_LONGITUDE + " REAL)");
 
-        // Create the products table with updated columns
-        db.execSQL("create Table " + PRODUCT_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT, "  + PRODUCT_COL_LATITUDE + " REAL, " + PRODUCT_COL_LONGITUDE + " REAL, " + PRODUCT_COL_PRODUCT_NAME + " TEXT, "+ PRODUCT_COL_PRODUCT_UNIT + " TEXT, " + PRODUCT_COL_PRODUCT_PRICE + " REAL, " + PRODUCT_COL_PRODUCT_QUANTITY + " INTEGER)");
+        db.execSQL("create Table " + PRODUCT_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT, "  + PRODUCT_COL_LATITUDE + " REAL, " + PRODUCT_COL_LONGITUDE + " REAL, " + PRODUCT_COL_PRODUCT_NAME + " TEXT, "+ PRODUCT_COL_PRODUCT_UNIT + " TEXT, " +PRODUCT_COL_PRODUCT_PRICE + " REAL, " + PRODUCT_COL_RATING + " INTEGER, " +PRODUCT_COL_RATING_COUNT + " INTEGER, " + PRODUCT_COL_PRODUCT_QUANTITY + " INTEGER)");
 
-        // Create the orders table with updated columns
         db.execSQL("create Table " + ORDERS_TABLE_NAME + " (" + ORDER_COL_USERNAME + " TEXT, " + ORDER_COL_LATITUDE_PICKUP + " REAL, " + ORDER_COL_LONGITUDE_PICKUP + " REAL, " + ORDER_COL_LATITUDE_DEST + " REAL, " + ORDER_COL_LONGITUDE_DEST + " REAL, " + ORDER_COL_PRODUCT_PRICE + " REAL, " + ORDER_COL_PRODUCT_QUANTITY + " INTEGER, " + ORDER_COL_F_NAME + " TEXT, " + ORDER_COL_ID + " TEXT, "+ ORDERS_COL_DELIERYBOY + " TEXT, " +DISPATCHERS_COL_STATUS + " TEXT, " + ORDER_COL_PRODUCT_NAME + " TEXT, " + ORDER_COL_PRODUCT_UNIT + " TEXT)");
 
         db.execSQL("create Table " + CART_TABLE_NAME + " (" + CART_COL_USERNAME + " TEXT, " + CART_COL_PRODUCT_NAME + " TEXT, " + CART_COL_PRODUCT_PRICE + " REAL, " + CART_COL_FARMER_NAME + " TEXT, " + CART_COL_PRODUCT_UNIT + " REAL, " + CART_COL_PRODUCT_QUANTITY + " INTEGER)");
@@ -213,16 +201,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 USER_COL_LONGITUDE
         };
 
-        // Define the WHERE clause to find the user by username
         String selection = USER_COL_USERNAME + " = ?";
         String[] selectionArgs = {username};
 
-        // Execute the query and return the Cursor
-
         return db.query(USER_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
     }
-
-    // Product related methods
 
     public boolean insertproductdata(
             String username,
@@ -245,8 +228,6 @@ public class DBHelper extends SQLiteOpenHelper {
         long result = db.insert(PRODUCT_TABLE_NAME, null, contentValues);
         return result != -1;
     }
-
-
 
     public boolean createOrder(
             String username,
@@ -309,12 +290,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-
-
-
-    //get order details
-
-
     public Cursor getCrops(String username){
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -366,8 +341,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 return "Added to cart";
             }
         }
-
-
     }
 
     public Cursor getCart(String username) {
@@ -383,7 +356,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 CART_COL_PRODUCT_UNIT
         };
 
-        // Define the WHERE clause to find the user by username
         String selection = CART_COL_USERNAME + " = ?";
         String[] selectionArgs = {username};
 
@@ -419,7 +391,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 PRODUCT_COL_PRODUCT_QUANTITY,
                 PRODUCT_COL_PRODUCT_UNIT,
         };
-
 
         String[] selectionArgs = {"0"};
         Cursor cursor = db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, null);
@@ -509,12 +480,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // Define the columns you want to retrieve
         String[] columns = {
-                USER_COL_USERNAME
+                USER_COL_USERNAME,
+                USER_COL_ROLE
         };
 
+        String selection = USER_COL_ROLE + " = ?";
+        String[] selectionArgs = {"Farmer"};
 
         // Execute the query and return the Cursor
-        Cursor cursor = db.query(USER_TABLE_NAME, columns, null, null, null, null, null);
+        Cursor cursor = db.query(USER_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
 
         ArrayList<String> usernames = new ArrayList<>();
 
@@ -578,8 +552,6 @@ public class DBHelper extends SQLiteOpenHelper {
         String selection = ORDER_COL_USERNAME + " = ?";
         String[] selectionArgs = {username};
 
-        // Execute the query and return the Cursor
-
         return db.query(TEM_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
     }
 
@@ -600,8 +572,9 @@ public class DBHelper extends SQLiteOpenHelper {
         long result = db.insert(DISPATCHERS_TABLE_NAME, null, contentValues);
     }
 
-    public Cursor getOrders(String username, String status) {
+    public Cursor getOrders(String username, String status,boolean forDeliveryBoy) {
         SQLiteDatabase db = this.getReadableDatabase();
+
 
         // Define the columns you want to retrieve
         String[] columns = {
@@ -616,14 +589,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 ORDER_COL_F_NAME,
                 ORDER_COL_PRODUCT_UNIT,
                 ORDER_COL_PRODUCT_NAME,
-                DISPATCHERS_COL_STATUS
+                DISPATCHERS_COL_STATUS,
+                ORDER_COL_ID
         };
 
         // Define the WHERE clause to find the user by username and the status of the order
-        String selection = ORDERS_COL_DELIERYBOY + " = ? AND " + DISPATCHERS_COL_STATUS + " = ?";
-        String[] selectionArgs = {username, status};
-
-
+        String selection = forDeliveryBoy?ORDERS_COL_DELIERYBOY + " = ? AND " + DISPATCHERS_COL_STATUS + " = ? OR " + DISPATCHERS_COL_STATUS + " = ?":ORDERS_COL_DELIERYBOY + " = ? AND " + DISPATCHERS_COL_STATUS + " = ? ";
+        String[] selectionArgs = {username, status,"picked Up"};
 
         return db.query(ORDERS_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
     }
@@ -648,7 +620,6 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
         return vegetables;
-
     }
 
     @SuppressLint("Range")
@@ -667,7 +638,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return cursor.moveToFirst()?cursor.getString(cursor.getColumnIndex(DISPATCHERS_COL_USERNAME)):"null";
     }
-
 
     public boolean assignOrder(String dboy, String oid) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -712,11 +682,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String selection = ORDERS_COL_DELIERYBOY + " = ? AND " + DISPATCHERS_COL_STATUS + " = ?";
         String[] selectionArgs = {dboy,"ordered"};
 
-
-
         Cursor cursor = db.query(ORDERS_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
-
-
 
         ArrayList<LatLng> coordinates = new ArrayList<>();
 
@@ -737,16 +703,6 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DISPATCHERS_COL_STATUS, completed);
-        contentValues.put(DISPATCHERS_COL_CURRENT_ORDER_ID, "0");
-        String selection = DISPATCHERS_COL_CURRENT_ORDER_ID + " = ?";
-        String[] selectionArgs = {orderId};
-        db.update(DISPATCHERS_TABLE_NAME, contentValues, selection, selectionArgs);
-    }
-
-    public void updateOrderStatus(String orderId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DISPATCHERS_COL_STATUS, "delivered");
         String selection = ORDER_COL_ID + " = ?";
         String[] selectionArgs = {orderId};
         db.update(ORDERS_TABLE_NAME, contentValues, selection, selectionArgs);
@@ -805,5 +761,58 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         return prices;
+    }
+
+    public int updateQuantity(String crop, String quantity,String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PRODUCT_COL_PRODUCT_QUANTITY, quantity);
+        String selection = PRODUCT_COL_PRODUCT_NAME + " = ? AND " + PRODUCT_COL_USERNAME + " = ?";
+        String[] selectionArgs = {crop,username};
+        int  res = db.update(PRODUCT_TABLE_NAME, contentValues, selection, selectionArgs);
+        return res;
+    }
+
+    @SuppressLint("Range")
+    public int getRatingCount(String crop, String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {
+                PRODUCT_COL_RATING_COUNT
+        };
+        String selection = PRODUCT_COL_PRODUCT_NAME + " = ? AND " + PRODUCT_COL_USERNAME + " = ?";
+        String[] selectionArgs = {crop,username};
+        @SuppressLint("Recycle") Cursor cursor = db.query(PRODUCT_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+        if(cursor != null && cursor.moveToFirst()){
+            return cursor.getInt(cursor.getColumnIndex(PRODUCT_COL_RATING_COUNT));
+        }
+        return 0;
+    }
+
+    public int addRating(String crop, int rating, int ratingCount,String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PRODUCT_COL_RATING, rating);
+        contentValues.put(PRODUCT_COL_RATING_COUNT, ratingCount);
+        String selection = PRODUCT_COL_PRODUCT_NAME + " = ? AND " + PRODUCT_COL_USERNAME + " = ?";
+        String[] selectionArgs = {crop,username};
+        int  res = db.update(PRODUCT_TABLE_NAME, contentValues, selection, selectionArgs);
+        return res;
+    }
+
+    @SuppressLint("Range")
+    public String getUrl(String crop){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {
+                PRICES_COL_URL
+        };
+        String selection = PRICES_COL_PRODUCT_NAME + " = ?";
+        String[] selectionArgs = {crop};
+        Cursor cursor = db.query(PRICES_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            return cursor.getString(cursor.getColumnIndex(PRICES_COL_URL));
+        }
+        return null;
+
     }
 }

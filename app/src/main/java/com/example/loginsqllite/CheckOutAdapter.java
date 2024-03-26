@@ -13,6 +13,8 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 public class CheckOutAdapter extends BaseAdapter {
 
     Cursor cursor;
@@ -21,8 +23,6 @@ public class CheckOutAdapter extends BaseAdapter {
     Context context;
 
     private static LayoutInflater inflater = null;
-
-
 
     public CheckOutAdapter(Context context,String username) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -59,6 +59,11 @@ public class CheckOutAdapter extends BaseAdapter {
         TextView cropPrice = (TextView) vi.findViewById(R.id.cartProductPrice);
         ImageView cropImage = (ImageView) vi.findViewById(R.id.cartProductImage);
 
+        DBHelper db = new DBHelper(context);
+
+        String url =  db.getUrl(cropName.getText().toString());
+        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+        imageLoaderTask.execute(url);
         cropImage.setVisibility(View.GONE);
         String name = cursor.getString(cursor.getColumnIndex("product_name"));
         String quantity = cursor.getString(cursor.getColumnIndex("product_quantity"));

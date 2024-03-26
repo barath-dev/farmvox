@@ -53,7 +53,6 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,58 +90,37 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
             mMap.setMyLocationEnabled(true);
         }
 
-        // Setting onclick event listener for the map
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        mMap.clear();
 
-            @Override
-            public void onMapClick(LatLng point) {
+        DBHelper db = new DBHelper(this);
 
-                // Already two locations
-                if (MarkerPoints.size() > 1) {
-                    MarkerPoints.clear();
-                    mMap.clear();
-                }
 
                 // Adding new item to the ArrayList
-                MarkerPoints.add(point);
+                MarkerPoints.add(db.getUserLocation("delivery"));
 
                 // Creating MarkerOptions
                 MarkerOptions options = new MarkerOptions();
 
                 // Setting the position of the marker
-                options.position(point);
-
-
-                if (MarkerPoints.size() == 1) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                } else if (MarkerPoints.size() == 2) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                }
-
+                options.position(db.getUserLocation("delivery"));
 
                 // Add new marker to the Google Map Android API V2
                 mMap.addMarker(options);
 
                 // Checks, whether start and end locations are captured
                 if (MarkerPoints.size() >= 2) {
-                    LatLng origin = MarkerPoints.get(0);
-                    LatLng dest = MarkerPoints.get(1);
+                    LatLng origin = db.getUserLocation("delivery");
+                    LatLng dest = new LatLng(db.getUserLocation("delivery").latitude+1, db.getUserLocation("delivery").longitude+1);
 
-                    // Getting URL to the Google Directions API
                     String url = getUrl(origin, dest);
                     Log.d("onMapClick", url);
                     FetchUrl FetchUrl = new FetchUrl();
 
-                    // Start downloading json data from Google Directions API
                     FetchUrl.execute(url);
                     //move map camera
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
                 }
-
-            }
-        });
-
     }
 
     private String getUrl(LatLng origin, LatLng dest) {

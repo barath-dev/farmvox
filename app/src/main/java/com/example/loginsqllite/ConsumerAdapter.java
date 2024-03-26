@@ -15,10 +15,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.view.LayoutInflater;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.Objects;
@@ -93,6 +95,13 @@ public class ConsumerAdapter extends BaseAdapter {
         cropPrice.setText(String.format("Product Price:₹ %s per %s", crop_price, crop_unit));
         deleteButton.setText("Add to Cart");
 
+        ImageView cropImage = (ImageView) vi.findViewById(R.id.imageView);
+        DBHelper db = new DBHelper(context);
+
+        String url =  db.getUrl(crop_name);
+
+        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+        imageLoaderTask.execute(url);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -110,8 +119,9 @@ public class ConsumerAdapter extends BaseAdapter {
                 try{
                     db.clearTEM();
                     boolean res =  db.createCheckOut(username,user_loc.latitude,user_loc.longitude,latitude,longitude,Double.parseDouble(crop_price), farmer_name, Integer.parseInt(crop_quantity),crop_name,crop_unit);
+                    Toast.makeText(context, "Check out created", Toast.LENGTH_SHORT).show();
                     if(res){
-                        Intent intent = new Intent(context,CheckOut.class);
+                        Intent intent = new Intent(context,GetQuantity.class);
                         intent.putExtra("username",username);
                         context.startActivity(intent);
                     }else{

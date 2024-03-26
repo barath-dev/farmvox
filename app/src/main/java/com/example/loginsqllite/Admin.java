@@ -19,6 +19,7 @@ public class Admin extends AppCompatActivity {
         Button viewAccounts = (Button) findViewById(R.id.removeProducts);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button marketPrices = (Button) findViewById(R.id.marketPrices);
         Button addCrops = (Button) findViewById(R.id.addProducts);
+        Button logout = (Button) findViewById(R.id.logoutButton);
 
         viewAccounts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +52,11 @@ public class Admin extends AppCompatActivity {
             }
         });
 
-
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

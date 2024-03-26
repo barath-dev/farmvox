@@ -14,8 +14,7 @@
         android:layout_marginStart="4dp"
         app:layout_constraintBaseline_toTopOf="@id/cartProductName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/potato" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
         android:id="@+id/buyNowButton"

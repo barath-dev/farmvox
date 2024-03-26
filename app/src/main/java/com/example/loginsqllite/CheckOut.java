@@ -53,6 +53,7 @@ public class CheckOut extends AppCompatActivity {
                      String farmerName = cursor.getString(cursor.getColumnIndex("farmer_name"));
                      String unit = cursor.getString(cursor.getColumnIndex("unit"));
 
+
                      String Dboy = db.getFreeDeliveryBoy();
 
 

@@ -10,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -29,7 +31,6 @@ public class CartAdapter extends BaseAdapter {
 
     String crop_name, crop_quantity, crop_price, crop_unit, farmer_name;
 
-    private CartAdapterListener cartAdapterListener;
 
     public CartAdapter(Context context, String username) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -79,6 +80,14 @@ public class CartAdapter extends BaseAdapter {
         crop_quantity = cartItems.getString(cartItems.getColumnIndex("quantity"));
         crop_price = cartItems.getString(cartItems.getColumnIndex("price"));
         crop_unit = cartItems.getString(cartItems.getColumnIndex("unit"));
+
+        ImageView cropImage = (ImageView) vi.findViewById(R.id.imageView);
+        DBHelper db = new DBHelper(context);
+
+        String url =  db.getUrl(crop_name);
+        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+        imageLoaderTask.execute(url);
+
         cropName.setText(crop_name);
         farmer_name = cartItems.getString(cartItems.getColumnIndex("fName"));
         farmerName.setText(String.format("Farmer Name: %s", farmer_name));
@@ -108,7 +117,7 @@ public class CartAdapter extends BaseAdapter {
                     db.clearTEM();
                     boolean res =  db.createCheckOut(username,user_loc.latitude,user_loc.longitude,latitude,longitude,Double.parseDouble(crop_price), farmer_name, Integer.parseInt(crop_quantity),crop_name,crop_unit);
                     if(res){
-                        Intent intent = new Intent(context,CheckOut.class);
+                        Intent intent = new Intent(context,GetQuantity.class);
                         intent.putExtra("username",username);
                         context.startActivity(intent);
                     }else{

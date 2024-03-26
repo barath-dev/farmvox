@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +74,14 @@ public class MyCropsAdapter extends BaseAdapter {
         cropQuantity.setText(crop_quantity + " " + crop_unit);
         cropPrice.setText(crop_price + " per " + crop_unit);
         buyNowButton.setVisibility(View.GONE);
+
+        ImageView cropImage = (ImageView) vi.findViewById(R.id.imageView);
+        DBHelper db = new DBHelper(context);
+
+        String url =  db.getUrl(crop_name);
+
+        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+        imageLoaderTask.execute(url);
 
         if(username.equals("admin")){
             farmerName.setVisibility(View.VISIBLE);

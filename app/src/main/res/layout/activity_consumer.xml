@@ -5,14 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/consumer"
     tools:context=".Consumer">
-
-    <!-- Search Bar -->
-
-    <!-- Search Button with Icon -->
-
-
-    <!-- Filter Button with Icon -->
 
     <EditText
         android:id="@+id/searchBar"
@@ -112,9 +106,5 @@
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mapButton" />
-
-    <!-- Cart Icon/Button -->
-
-    <!-- Product Display Section -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

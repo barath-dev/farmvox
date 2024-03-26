@@ -29,7 +29,5 @@ public class Cart extends AppCompatActivity {
 
         productListView = (ListView) findViewById(R.id.cartRecyclerView);
         productListView.setAdapter((ListAdapter) new CartAdapter(Cart.this, username));
-
     }
-
 }
