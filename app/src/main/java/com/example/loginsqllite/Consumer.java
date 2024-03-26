@@ -1,6 +1,7 @@
 package com.example.loginsqllite;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Consumer extends AppCompatActivity {
@@ -28,12 +30,13 @@ public class Consumer extends AppCompatActivity {
 
         String username = getIntent().getStringExtra("username");
         Button checkOrders = findViewById(R.id.checkOrdersButton);
+        Button sortOptions = findViewById(R.id.filterButton);
 
         isFarmer = new DBHelper(this).isFarmer(username);
 
         // Set up RecyclerView
          productListView =(ListView) findViewById(R.id.productListView);
-         productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer, null));
+         productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer, null,null));
 
          Button map = findViewById(R.id.mapButton);
             map.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +57,7 @@ public class Consumer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String search = searchBar.getText().toString();
-                productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer, search));
+                productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer, search, null));
             }
         });
         ImageButton cartButton = findViewById(R.id.cartButton);
@@ -75,6 +78,25 @@ public class Consumer extends AppCompatActivity {
                 intent.putExtra("status", "ordered");
                 intent.putExtra("isConsumer", "true");
                 startActivity(intent);
+            }
+        });
+
+        //create a list of sort options
+        String[] sortOptionsList = new String[]{"Price: Low to High", "Price: High to Low", "Rating: Low to High", "Rating: High to Low"};
+        //create a dialog box to display the sort options
+        sortOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Consumer.this);
+                builder.setTitle("Sort Options");
+                builder.setItems(sortOptionsList, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String sortOption = sortOptionsList[which];
+                        productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer, null, sortOption));
+                    }
+                });
+                builder.show();
             }
         });
     }

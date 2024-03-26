@@ -32,7 +32,7 @@ public class FarmerProfile extends AppCompatActivity {
         isFarmer = new DBHelper(this).isFarmer(username);
 
         productListView =(ListView) findViewById(R.id.productListView);
-        productListView.setAdapter(new ConsumerAdapter(FarmerProfile.this, username, isFarmer, null));
+        productListView.setAdapter(new ConsumerAdapter(FarmerProfile.this, username, isFarmer, null,null));
 
         TextView textView = findViewById(R.id.farmersProfile);
         textView.setVisibility(View.VISIBLE);

@@ -392,6 +392,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 PRODUCT_COL_PRODUCT_PRICE,
                 PRODUCT_COL_PRODUCT_QUANTITY,
                 PRODUCT_COL_PRODUCT_UNIT,
+                PRODUCT_COL_RATING,
+                PRODUCT_COL_RATING_COUNT
         };
 
         String[] selectionArgs = {"0"};
@@ -514,7 +516,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 PRODUCT_COL_PRODUCT_NAME,
                 PRODUCT_COL_PRODUCT_PRICE,
                 PRODUCT_COL_PRODUCT_QUANTITY,
-                PRODUCT_COL_PRODUCT_UNIT
+                PRODUCT_COL_PRODUCT_UNIT,
+                PRODUCT_COL_RATING,
+                PRODUCT_COL_RATING_COUNT
         };
 
         // Define the WHERE clause to find the user by username
@@ -803,7 +807,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return 0;
     }
 
-    public int addRating(String crop, int rating, int ratingCount,String username) {
+    public int addRating(String crop, double rating, int ratingCount,String username) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(PRODUCT_COL_RATING, rating);
@@ -842,7 +846,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 PRODUCT_COL_PRODUCT_NAME,
                 PRODUCT_COL_PRODUCT_PRICE,
                 PRODUCT_COL_PRODUCT_QUANTITY,
-                PRODUCT_COL_PRODUCT_UNIT
+                PRODUCT_COL_PRODUCT_UNIT,
+                PRODUCT_COL_RATING,
+                PRODUCT_COL_RATING_COUNT
         };
 
         // Define the WHERE clause to find the user by username
@@ -851,5 +857,55 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // Execute the query and return the Cursor
         return db.query(PRODUCT_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+    }
+
+    @SuppressLint("Range")
+    public double getRating(String crop, String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {
+                PRODUCT_COL_RATING
+        };
+        String selection = PRODUCT_COL_PRODUCT_NAME + " = ? AND " + PRODUCT_COL_USERNAME + " = ?";
+        String[] selectionArgs = {crop,username};
+        @SuppressLint("Recycle") Cursor cursor = db.query(PRODUCT_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+        if(cursor != null && cursor.moveToFirst()){
+            return cursor.getInt(cursor.getColumnIndex(PRODUCT_COL_RATING));
+        }
+        return 0;
+    }
+
+    public Cursor sortProducts(String sort) {
+        String[] sortOptionsList = new String[]{"Price: Low to High", "Price: High to Low", "Rating: Low to High", "Rating: High to Low"};
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {
+                PRODUCT_COL_USERNAME,
+                PRODUCT_COL_LATITUDE,
+                PRODUCT_COL_LONGITUDE,
+                PRODUCT_COL_PRODUCT_NAME,
+                PRODUCT_COL_PRODUCT_PRICE,
+                PRODUCT_COL_PRODUCT_QUANTITY,
+                PRODUCT_COL_PRODUCT_UNIT,
+                PRODUCT_COL_RATING,
+                PRODUCT_COL_RATING_COUNT
+        };
+
+        // Define the WHERE clause to find the user by username
+        String selection = PRODUCT_COL_PRODUCT_NAME + " = ?";
+        String[] selectionArgs = {sort};
+
+        // Execute the query and return the Cursor
+       if (sort.equals(sortOptionsList[0])) {
+            return db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, PRODUCT_COL_PRODUCT_PRICE + " ASC");
+        } else if (sort.equals(sortOptionsList[1])) {
+            return db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, PRODUCT_COL_PRODUCT_PRICE + " DESC");
+        } else if (sort.equals(sortOptionsList[2])) {
+            return db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, PRODUCT_COL_RATING + " ASC");
+        } else if (sort.equals(sortOptionsList[3])) {
+            return db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, PRODUCT_COL_RATING + " DESC");
+        } else {
+            return null;
+        }
     }
 }

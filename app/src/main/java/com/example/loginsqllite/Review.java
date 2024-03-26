@@ -69,8 +69,15 @@ public class Review extends AppCompatActivity {
 
                 int ratingCount = dbHelper.getRatingCount(product,username);
 
+                double prevRating = dbHelper.getRating(product,username);
 
-                dbHelper.addRating(product, Integer.parseInt(rating),ratingCount+1,username);
+                double newRating = (prevRating*ratingCount + Integer.parseInt(rating))/(ratingCount+1);
+
+                //round to 2 decimal places
+                newRating = Math.round(newRating*100.0)/100.0;
+
+
+                dbHelper.addRating(product, newRating,ratingCount+1,username);
             }
         });
 

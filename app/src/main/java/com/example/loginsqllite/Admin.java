@@ -24,7 +24,9 @@ public class Admin extends AppCompatActivity {
         viewAccounts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(Admin.this, Delete.class);
+                intent.putExtra("accounts", "false");
+                startActivity(intent);
             }
         });
         removeProducts.setOnClickListener(new View.OnClickListener() {

@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 
 
+import org.w3c.dom.Text;
+
 import java.util.Objects;
 
 public class ConsumerAdapter extends BaseAdapter {
@@ -41,7 +43,7 @@ public class ConsumerAdapter extends BaseAdapter {
 
     LatLng user_loc;
 
-    public ConsumerAdapter(Context context, String username, boolean isFarmer, String search) {
+    public ConsumerAdapter(Context context, String username, boolean isFarmer, String search,String sortOption) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
          db = new DBHelper(context);
@@ -83,19 +85,28 @@ public class ConsumerAdapter extends BaseAdapter {
         TextView farmerName = (TextView) vi.findViewById(R.id.cartFarmerName);
         Button deleteButton = (Button) vi.findViewById(R.id.removeButton);
         Button buyNow = (Button) vi.findViewById(R.id.buyNowButton);
+        TextView review = (TextView) vi.findViewById(R.id.ratingTextView);
          crop_name = cursor.getString(cursor.getColumnIndex("product_name"));
          crop_quantity = cursor.getString(cursor.getColumnIndex("product_quantity"));
          crop_price = cursor.getString(cursor.getColumnIndex("product_price"));
          crop_unit = cursor.getString(cursor.getColumnIndex("product_unit"));
          latitude = cursor.getDouble(cursor.getColumnIndex("latitude"));
-
          longitude = cursor.getDouble(cursor.getColumnIndex("longitude"));
+
+         String rating = cursor.getString(cursor.getColumnIndex("rating"));
+         String ratingCount = cursor.getString(cursor.getColumnIndex("rating_count"));
 
         cropName.setText(String.format("Product Name: %s", crop_name));
         farmer_name = cursor.getString(cursor.getColumnIndex("username"));
         farmerName.setText(String.format("Farmer Name: %s", farmer_name));
         cropQuantity.setText(String.format("Product Quantity: %s %s", crop_quantity, crop_unit));
         cropPrice.setText(String.format("Product Price:₹ %s per %s", crop_price, crop_unit));
+        if (rating == null){
+            review.setText("Rating: Not Rated");
+        }else{
+            review.setText(String.format("Rating: %s/5 (%s)", rating, ratingCount));
+        }
+
         deleteButton.setText("Add to Cart");
 
         ImageView cropImage = (ImageView) vi.findViewById(R.id.imageView);

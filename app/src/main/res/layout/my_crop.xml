@@ -21,11 +21,47 @@
         android:layout_width="206dp"
         android:layout_height="37dp"
         android:layout_marginStart="208dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="5dp"
         android:text="Buy now"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.375"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cartProductPrice"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/cartProductQuantity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="Quantity: 0"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cartFarmerName" />
+
+    <TextView
+        android:id="@+id/cartProductPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Price: $0.00"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cartProductQuantity" />
+
+    <Button
+        android:id="@+id/removeButton"
+        android:layout_width="189dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#7C98B3"
+        android:text="Remove"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cartProductPrice"
         tools:ignore="TouchTargetSizeCheck" />
@@ -44,42 +80,6 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
-        android:id="@+id/cartProductQuantity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Quantity: 0"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cartFarmerName" />
-
-    <TextView
-        android:id="@+id/cartProductPrice"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Price: $0.00"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cartProductQuantity" />
-
-    <Button
-        android:id="@+id/removeButton"
-        android:layout_width="189dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="4dp"
-        android:backgroundTint="#7C98B3"
-        android:text="Remove"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cartProductPrice"
-        tools:ignore="TouchTargetSizeCheck" />
-
-    <TextView
         android:id="@+id/cartFarmerName"
         android:layout_width="403dp"
         android:layout_height="22dp"
@@ -91,5 +91,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cartProductName" />
+
+    <TextView
+        android:id="@+id/ratingTextView"
+        android:layout_width="406dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="6dp"
+        android:text="Ratings"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cartFarmerName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

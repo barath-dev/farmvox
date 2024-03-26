@@ -21,7 +21,7 @@ public class Delete extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_my_crops);
 
-        if (getIntent().getStringExtra("accounts") != null) {
+        if (getIntent().getStringExtra("accounts") != null && getIntent().getStringExtra("accounts").equals("true")) {
             listView = (ListView) findViewById(R.id.myCropsList);
             listView.setAdapter(new RemoveAccountsAdapter(Delete.this));
         }else{
