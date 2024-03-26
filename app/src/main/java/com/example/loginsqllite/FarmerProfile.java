@@ -10,9 +10,6 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class FarmerProfile extends AppCompatActivity {
 
@@ -35,7 +32,7 @@ public class FarmerProfile extends AppCompatActivity {
         isFarmer = new DBHelper(this).isFarmer(username);
 
         productListView =(ListView) findViewById(R.id.productListView);
-        productListView.setAdapter(new ConsumerAdapter(FarmerProfile.this, username, isFarmer));
+        productListView.setAdapter(new ConsumerAdapter(FarmerProfile.this, username, isFarmer, null));
 
         TextView textView = findViewById(R.id.farmersProfile);
         textView.setVisibility(View.VISIBLE);

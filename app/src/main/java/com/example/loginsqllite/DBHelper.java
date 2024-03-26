@@ -225,6 +225,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(PRODUCT_COL_PRODUCT_NAME, selectedProduct);
         contentValues.put(PRODUCT_COL_PRODUCT_PRICE, price);
         contentValues.put(PRODUCT_COL_PRODUCT_QUANTITY, quantity);
+        contentValues.put(PRODUCT_COL_RATING, 0);
+        contentValues.put(PRODUCT_COL_RATING_COUNT, 0);
         long result = db.insert(PRODUCT_TABLE_NAME, null, contentValues);
         return result != -1;
     }
@@ -594,8 +596,8 @@ public class DBHelper extends SQLiteOpenHelper {
         };
 
         // Define the WHERE clause to find the user by username and the status of the order
-        String selection = forDeliveryBoy?ORDERS_COL_DELIERYBOY + " = ? AND " + DISPATCHERS_COL_STATUS + " = ? OR " + DISPATCHERS_COL_STATUS + " = ?":ORDERS_COL_DELIERYBOY + " = ? AND " + DISPATCHERS_COL_STATUS + " = ? ";
-        String[] selectionArgs = {username, status,"picked Up"};
+        String selection = forDeliveryBoy?ORDERS_COL_DELIERYBOY + " = ? AND " + DISPATCHERS_COL_STATUS + " = ? OR " + DISPATCHERS_COL_STATUS + " = ?":ORDER_COL_USERNAME + " = ? AND " + DISPATCHERS_COL_STATUS + " = ? ";
+        String[] selectionArgs = forDeliveryBoy? new String[]{username, status, "picked Up"} : new String[]{username, status,};
 
         return db.query(ORDERS_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
     }
@@ -644,12 +646,25 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DISPATCHERS_COL_STATUS, "Assigned");
         contentValues.put(DISPATCHERS_COL_CURRENT_ORDER_ID, oid);
-        contentValues.put(DISPATCHERS_COL_DELIVERY_COUNT, getCount(dboy) + 1);
         String selection = DISPATCHERS_COL_USERNAME + " = ?";
         String[] selectionArgs = {dboy};
         int res = db.update(DISPATCHERS_TABLE_NAME, contentValues, selection, selectionArgs);
         return res > 0;
     }
+
+    public boolean freeDispatcher(String oid,String dboy) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DISPATCHERS_COL_STATUS, "Free");
+        contentValues.put(DISPATCHERS_COL_CURRENT_ORDER_ID, "");
+        contentValues.put(DISPATCHERS_COL_DELIVERY_COUNT, getCount(dboy) + 1);
+        String selection = DISPATCHERS_COL_CURRENT_ORDER_ID + " = ?";
+        String[] selectionArgs = {oid};
+        int res = db.update(DISPATCHERS_TABLE_NAME, contentValues, selection, selectionArgs);
+        return res > 0;
+    }
+
+
 
     @SuppressLint("Range")
     private int getCount(String dboy) {
@@ -814,5 +829,27 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return null;
 
+    }
+
+    public Cursor searchProduct(String search) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {
+                PRODUCT_COL_USERNAME,
+                PRODUCT_COL_LATITUDE,
+                PRODUCT_COL_LONGITUDE,
+                PRODUCT_COL_PRODUCT_NAME,
+                PRODUCT_COL_PRODUCT_PRICE,
+                PRODUCT_COL_PRODUCT_QUANTITY,
+                PRODUCT_COL_PRODUCT_UNIT
+        };
+
+        // Define the WHERE clause to find the user by username
+        String selection = PRODUCT_COL_PRODUCT_NAME + " LIKE ?";
+        String[] selectionArgs = {"%" + search + "%"};
+
+        // Execute the query and return the Cursor
+        return db.query(PRODUCT_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
     }
 }

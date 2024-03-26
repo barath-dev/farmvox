@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.squareup.picasso.Picasso;
 
 
 import java.util.Objects;
@@ -42,12 +41,16 @@ public class ConsumerAdapter extends BaseAdapter {
 
     LatLng user_loc;
 
-    public ConsumerAdapter(Context context, String username, boolean isFarmer) {
+    public ConsumerAdapter(Context context, String username, boolean isFarmer, String search) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
          db = new DBHelper(context);
         this.username = username;
-        cursor =  !isFarmer?db.getAllProducts():db.getAllProductsForFarmer(username);
+        if (search==null){
+            cursor =  !isFarmer?db.getAllProducts():db.getAllProductsForFarmer(username);
+        }else{
+            cursor = db.searchProduct(search);
+        }
         user_loc = db.getUserLocation(username);
     }
 

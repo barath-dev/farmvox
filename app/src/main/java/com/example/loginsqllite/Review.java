@@ -31,6 +31,8 @@ public class Review extends AppCompatActivity {
         Spinner deliveryRating = findViewById(R.id.deliveryRatingSpinner);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button submit = findViewById(R.id.reviewSubmitButton);
 
+
+
         List<Integer> spinnerArray = new ArrayList<>();
             spinnerArray.add(1);
             spinnerArray.add(2);
@@ -58,14 +60,17 @@ public class Review extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DBHelper dbHelper = new DBHelper(Review.this);
-                String username = getIntent().getStringExtra("username");
+                String username = getIntent().getStringExtra("farmer");
                 String product = getIntent().getStringExtra("product");
                 String rating = ratingSpinner.getSelectedItem().toString();
+/*
                 String deliveryRate = deliveryRating.getSelectedItem().toString();
+*/
 
                 int ratingCount = dbHelper.getRatingCount(product,username);
 
-                dbHelper.addRating(product, Integer.parseInt(rating),ratingCount,username);
+
+                dbHelper.addRating(product, Integer.parseInt(rating),ratingCount+1,username);
             }
         });
 

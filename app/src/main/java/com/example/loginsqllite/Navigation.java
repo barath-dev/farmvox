@@ -4,7 +4,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationRequest;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.Manifest;
@@ -12,13 +11,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,32 +53,29 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
     Location mLastLocation;
     Marker mCurrLocationMarker;
 
+    LocationRequest mLocationRequest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
 
         checkLocationPermission();
-        // Initializing
+
         MarkerPoints = new ArrayList<>();
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        getIntent().getStringExtra("username");
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
+
         mapFragment.getMapAsync(this);
+
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
         //Initialize Google Play Services
@@ -90,37 +86,56 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
             mMap.setMyLocationEnabled(true);
         }
 
-        mMap.clear();
 
-        DBHelper db = new DBHelper(this);
 
+        // Setting onclick event listener for the map
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(@NonNull LatLng point) {
+
+                // Already two locations
+                if (MarkerPoints.size() > 1) {
+                    MarkerPoints.clear();
+                    mMap.clear();
+                }
 
                 // Adding new item to the ArrayList
-                MarkerPoints.add(db.getUserLocation("delivery"));
+                MarkerPoints.add(point);
 
                 // Creating MarkerOptions
                 MarkerOptions options = new MarkerOptions();
 
                 // Setting the position of the marker
-                options.position(db.getUserLocation("delivery"));
+                options.position(point);
+
+                if (MarkerPoints.size() == 1) {
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                } else if (MarkerPoints.size() == 2) {
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                }
 
                 // Add new marker to the Google Map Android API V2
                 mMap.addMarker(options);
 
                 // Checks, whether start and end locations are captured
                 if (MarkerPoints.size() >= 2) {
-                    LatLng origin = db.getUserLocation("delivery");
-                    LatLng dest = new LatLng(db.getUserLocation("delivery").latitude+1, db.getUserLocation("delivery").longitude+1);
+                    LatLng origin = MarkerPoints.get(0);
+                    LatLng dest = MarkerPoints.get(1);
 
+                    // Getting URL to the Google Directions API
                     String url = getUrl(origin, dest);
-                    Log.d("onMapClick", url);
+                    Log.d("onMapClick", url.toString());
                     FetchUrl FetchUrl = new FetchUrl();
 
+                    // Start downloading json data from Google Directions API
                     FetchUrl.execute(url);
                     //move map camera
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
                 }
+            }
+        });
     }
 
     private String getUrl(LatLng origin, LatLng dest) {
@@ -303,12 +318,8 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
         mGoogleApiClient.connect();
     }
 
+
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    /*@Override
         public void onConnected(Bundle bundle) {
 
             mLocationRequest = new LocationRequest();
@@ -318,11 +329,10 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener) this);
             }
 
         }
-    */
     @Override
     public void onConnectionSuspended(int i) {
 
@@ -370,9 +380,6 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
 
                 //Prompt the user once explanation has been shown
                 ActivityCompat.requestPermissions(this,
@@ -418,9 +425,6 @@ public class Navigation extends FragmentActivity implements OnMapReadyCallback,
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
             }
-
-            // other 'case' lines to check for other permissions this app might request.
-            // You can add here other case statements according to your requirement.
         }
     }
 }
