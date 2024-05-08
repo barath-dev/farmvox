@@ -35,7 +35,7 @@ public class AddCrops extends AppCompatActivity {
                 }
                 int res = dbHelper.addProduct(cropName.getText().toString(), Integer.parseInt(minPrice.getText().toString()), Integer.parseInt(maxPrice.getText().toString()), url.getText().toString());
 
-                if (res == 1) {
+                if (res>0) {
                     Toast.makeText(AddCrops.this, "Product added successfully", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AddCrops.this, "Product not added", Toast.LENGTH_SHORT).show();

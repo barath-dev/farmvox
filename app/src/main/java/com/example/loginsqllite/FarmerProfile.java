@@ -3,6 +3,7 @@ package com.example.loginsqllite;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -43,7 +44,7 @@ public class FarmerProfile extends AppCompatActivity {
         searchBar = findViewById(R.id.searchBar);
 
         // Set up search button click listener
-        ImageButton searchButton = findViewById(R.id.searchButton);
+        Button searchButton = findViewById(R.id.searchButton);
         ImageButton cartButton = findViewById(R.id.cartButton);
         cartButton.setOnClickListener(new View.OnClickListener() {
             @Override

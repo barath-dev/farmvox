@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -77,7 +78,13 @@ public class Review extends AppCompatActivity {
                 newRating = Math.round(newRating*100.0)/100.0;
 
 
-                dbHelper.addRating(product, newRating,ratingCount+1,username);
+                int res =dbHelper.addRating(product, newRating,ratingCount+1,username);
+
+                if (res == 1){
+                    Toast.makeText(Review.this, "Review Submitted", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
             }
         });
 

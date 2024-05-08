@@ -22,8 +22,8 @@
             android:layout_marginBottom="20dp"
             android:hint="Product Name"
             android:inputType="text"
+            android:paddingLeft="20dp"
             android:textColorHint="#757575" />
-
 
 
         <EditText
@@ -33,6 +33,7 @@
             android:layout_marginBottom="20dp"
             android:hint="Minimum Price per Kg"
             android:inputType="number"
+            android:paddingLeft="20dp"
             android:textColorHint="#757575" />
 
         <!-- Submit Button -->
@@ -44,6 +45,7 @@
             android:layout_marginBottom="20dp"
             android:hint="Maximum Price per Kg"
             android:inputType="number"
+            android:paddingLeft="20dp"
             android:textColorHint="#757575" />
 
         <EditText
@@ -53,6 +55,7 @@
             android:layout_marginBottom="20dp"
             android:hint="Image URL"
             android:inputType="text"
+            android:paddingLeft="20dp"
             android:textColorHint="#757575" />
 
         <Button

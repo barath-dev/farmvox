@@ -27,6 +27,8 @@ public class CartAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     private final Context context;
 
+    DBHelper db;
+
     String username;
 
     String crop_name, crop_quantity, crop_price, crop_unit, farmer_name;
@@ -36,7 +38,7 @@ public class CartAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
         this.username = username;
-        DBHelper db = new DBHelper(context);
+        db = new DBHelper(context);
         cartItems = db.getCart(username);
         if (cartItems.getCount() == 0) {
             Toast.makeText(context, "No items in cart", Toast.LENGTH_SHORT).show();
@@ -47,6 +49,8 @@ public class CartAdapter extends BaseAdapter {
 
         Toast.makeText(context, username, Toast.LENGTH_SHORT).show();
     }
+
+
 
     @Override
     public int getCount() {
@@ -70,6 +74,7 @@ public class CartAdapter extends BaseAdapter {
         if (convertView == null)
             vi = inflater.inflate(R.layout.my_crop, null);
         cartItems.moveToPosition(position);
+
         TextView cropName = (TextView) vi.findViewById(R.id.cartProductName);
         TextView cropQuantity = (TextView) vi.findViewById(R.id.cartProductQuantity);
         TextView cropPrice = (TextView) vi.findViewById(R.id.cartProductPrice);
@@ -82,13 +87,41 @@ public class CartAdapter extends BaseAdapter {
         crop_unit = cartItems.getString(cartItems.getColumnIndex("unit"));
 
         ImageView cropImage = (ImageView) vi.findViewById(R.id.imageView);
-        DBHelper db = new DBHelper(context);
-
-        String url =  db.getUrl(crop_name);
-        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
-        imageLoaderTask.execute(url);
 
         cropName.setText(crop_name);
+
+        if (cropName.getText().toString().equalsIgnoreCase("Tomato")){
+            cropImage.setImageResource(R.drawable.tomato);
+            Toast.makeText(context, "Tomato", Toast.LENGTH_SHORT).show();
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("Cabbage".toLowerCase())){
+            cropImage.setImageResource(R.drawable.cabbage);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("Carrot".toLowerCase())){
+            cropImage.setImageResource(R.drawable.carrot);
+        }
+
+        else if (cropName.getText().toString().toLowerCase().contains("bitter".toLowerCase())){
+            cropImage.setImageResource(R.drawable.bitter);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("Green Chilli".toLowerCase())){
+            cropImage.setImageResource(R.drawable.green_chilly);
+        }
+
+        else if (cropName.getText().toString().toLowerCase().contains("carrot".toLowerCase())){
+            cropImage.setImageResource(R.drawable.carrot);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("beans".toLowerCase())){
+            cropImage.setImageResource(R.drawable.beans);
+        }
+        else{
+            String url =  db.getUrl(crop_name);
+
+            ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+            imageLoaderTask.execute(url);
+        }
+
+
         farmer_name = cartItems.getString(cartItems.getColumnIndex("fName"));
         farmerName.setText(String.format("Farmer Name: %s", farmer_name));
         cropQuantity.setText(String.format("Available Product Quantity: %s %s", crop_quantity, crop_unit));
@@ -99,6 +132,7 @@ public class CartAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 DBHelper db = new DBHelper(context);
+
                 db.deleteCartItem(username, crop_name, crop_quantity, crop_price);
                 Toast.makeText(context, "Removed from cart", Toast.LENGTH_SHORT).show();
                 deleteButton.setText("Removed from Cart");
@@ -111,11 +145,9 @@ public class CartAdapter extends BaseAdapter {
                 try{
                     DBHelper db = new DBHelper(context);
                     LatLng user_loc = db.getUserLocation(username);
-                    LatLng farmer_loc = db.getUserLocation(farmer_name);
-                    double latitude = farmer_loc.latitude;
-                    double longitude = farmer_loc.longitude;
                     db.clearTEM();
-                    boolean res =  db.createCheckOut(username,user_loc.latitude,user_loc.longitude,latitude,longitude,Double.parseDouble(crop_price), farmer_name, Integer.parseInt(crop_quantity),crop_name,crop_unit);
+                    cartItems.moveToPosition(position);
+                    boolean res =  db.createCheckOut(username,user_loc.latitude,user_loc.longitude,cartItems.getDouble(cartItems.getColumnIndex("latitude")),cartItems.getDouble(cartItems.getColumnIndex("longitude")),Double.parseDouble(cartItems.getString(cartItems.getColumnIndex("product_price"))), cartItems.getString(cartItems.getColumnIndex("username")), Integer.parseInt(cartItems.getString(cartItems.getColumnIndex("product_quantity"))),cartItems.getString(cartItems.getColumnIndex("product_name")),cartItems.getString(cartItems.getColumnIndex("product_unit")));
                     if(res){
                         Intent intent = new Intent(context,GetQuantity.class);
                         intent.putExtra("username",username);

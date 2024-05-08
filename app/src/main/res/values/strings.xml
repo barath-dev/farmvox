@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">loginsqllite</string>
+    <string name="app_name">Farmvox</string>
     <string name="total_price_format">Total Price: $%.2f</string>
     <string-array name="roles_array">
         <item>Farmer</item>
@@ -23,4 +23,6 @@
 
 
     <string name="use_this_location">use this location</string>
+    <string name="title_activity_maps2">MapsActivity2</string>
+    <string name="buy_now">Buy now</string>
 </resources>

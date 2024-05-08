@@ -10,6 +10,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Objects;
 
 public class PriceCalculator {
     public interface PriceCallback {
@@ -18,9 +19,9 @@ public class PriceCalculator {
     }
 
     public static void getMarketPricePerKg(String selectedProduct, PriceCallback callback) {
-        String apiKey = "579b464db66ec23bdd0000011c80a41434e74d2179262bd4d3c061d0";
+        String apiKey = "579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b";
         String apiUrl = "https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070";
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(apiUrl).newBuilder();
+        HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(apiUrl)).newBuilder();
         urlBuilder.addQueryParameter("api-key", apiKey);
         urlBuilder.addQueryParameter("format", "xml");
         urlBuilder.addQueryParameter("offset", "0");

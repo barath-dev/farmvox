@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +41,7 @@ public class Consumer extends AppCompatActivity {
 
          Button map = findViewById(R.id.mapButton);
             map.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(Consumer.this, MapsActivity.class);
@@ -51,7 +53,7 @@ public class Consumer extends AppCompatActivity {
         EditText searchBar = findViewById(R.id.searchBar);
 
 
-        ImageButton searchButton = findViewById(R.id.searchButton);
+        Button searchButton = findViewById(R.id.searchButton);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +85,6 @@ public class Consumer extends AppCompatActivity {
 
         //create a list of sort options
         String[] sortOptionsList = new String[]{"Price: Low to High", "Price: High to Low", "Rating: Low to High", "Rating: High to Low"};
-        //create a dialog box to display the sort options
         sortOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +93,7 @@ public class Consumer extends AppCompatActivity {
                 builder.setItems(sortOptionsList, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         String sortOption = sortOptionsList[which];
                         productListView.setAdapter(new ConsumerAdapter(Consumer.this, username, isFarmer, null, sortOption));
                     }

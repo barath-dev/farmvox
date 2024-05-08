@@ -1,10 +1,5 @@
 package com.example.loginsqllite;
 
-
-
-
-
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -20,10 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
-
-
-import org.w3c.dom.Text;
-
 import java.util.Objects;
 
 public class ConsumerAdapter extends BaseAdapter {
@@ -48,11 +39,20 @@ public class ConsumerAdapter extends BaseAdapter {
         this.context = context;
          db = new DBHelper(context);
         this.username = username;
-        if (search==null){
-            cursor =  !isFarmer?db.getAllProducts():db.getAllProductsForFarmer(username);
-        }else{
-            cursor = db.searchProduct(search);
+        if (sortOption!=null){
+            Toast.makeText(context, sortOption, Toast.LENGTH_SHORT).show();
+            cursor = db.sortProducts(sortOption);
+        }else {
+            cursor = !isFarmer ? db.getAllProducts() : db.getAllProductsForFarmer(username);
         }
+        if(sortOption==null){
+            if (search==null){
+                cursor =  !isFarmer?db.getAllProducts():db.getAllProductsForFarmer(username);
+            }else{
+                cursor = db.searchProduct(search);
+            }
+        }
+
         user_loc = db.getUserLocation(username);
     }
 
@@ -93,12 +93,36 @@ public class ConsumerAdapter extends BaseAdapter {
          latitude = cursor.getDouble(cursor.getColumnIndex("latitude"));
          longitude = cursor.getDouble(cursor.getColumnIndex("longitude"));
 
+
+
          String rating = cursor.getString(cursor.getColumnIndex("rating"));
          String ratingCount = cursor.getString(cursor.getColumnIndex("rating_count"));
 
         cropName.setText(String.format("Product Name: %s", crop_name));
         farmer_name = cursor.getString(cursor.getColumnIndex("username"));
         farmerName.setText(String.format("Farmer Name: %s", farmer_name));
+
+        buyNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.clearTEM();
+                try{
+                    cursor.moveToPosition(position);
+                    boolean res =  db.createCheckOut(username,user_loc.latitude,user_loc.longitude,cursor.getDouble(cursor.getColumnIndex("latitude")),cursor.getDouble(cursor.getColumnIndex("longitude")),Double.parseDouble(cursor.getString(cursor.getColumnIndex("product_price"))), cursor.getString(cursor.getColumnIndex("username")), Integer.parseInt(cursor.getString(cursor.getColumnIndex("product_quantity"))),cursor.getString(cursor.getColumnIndex("product_name")),cursor.getString(cursor.getColumnIndex("product_unit")));
+                    if(res){
+                        Intent intent = new Intent(context,GetQuantity.class);
+                        intent.putExtra("username",username);
+                        context.startActivity(intent);
+                        notifyDataSetChanged();
+                    }else{
+                        Toast.makeText(context, "Order Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e) {
+                    Log.i("Error", Objects.requireNonNull(e.getMessage()));
+                }
+            }
+        });
+
         cropQuantity.setText(String.format("Product Quantity: %s %s", crop_quantity, crop_unit));
         cropPrice.setText(String.format("Product Price:₹ %s per %s", crop_price, crop_unit));
         if (rating == null){
@@ -110,42 +134,49 @@ public class ConsumerAdapter extends BaseAdapter {
         deleteButton.setText("Add to Cart");
 
         ImageView cropImage = (ImageView) vi.findViewById(R.id.imageView);
-        DBHelper db = new DBHelper(context);
 
-        String url =  db.getUrl(crop_name);
+        if (cropName.getText().toString().toLowerCase().contains("Tomato".toLowerCase())){
+            cropImage.setImageResource(R.drawable.tomato);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("Cabbage".toLowerCase())){
+            cropImage.setImageResource(R.drawable.cabbage);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("Carrot".toLowerCase())){
+            cropImage.setImageResource(R.drawable.carrot);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("bitter".toLowerCase())){
+            cropImage.setImageResource(R.drawable.bitter);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("Green Chilli".toLowerCase())){
+            cropImage.setImageResource(R.drawable.green_chilly);
+        }
 
-        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
-        imageLoaderTask.execute(url);
+        else if (cropName.getText().toString().toLowerCase().contains("carrot".toLowerCase())){
+            cropImage.setImageResource(R.drawable.carrot);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("beans".toLowerCase())){
+            cropImage.setImageResource(R.drawable.beans);
+        }
+        else{
+            String url =  db.getUrl(crop_name);
+
+            ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+            imageLoaderTask.execute(url);
+        }
+
+
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
+                cursor.moveToPosition(position);
 
-                   db.createCart(username, crop_name, crop_quantity, crop_price, crop_unit, farmer_name);
-
-                deleteButton.setText("Added to Cart");
+                db.createCart(username, crop_name = cursor.getString(cursor.getColumnIndex("product_name")), crop_quantity = cursor.getString(cursor.getColumnIndex("product_quantity")), cursor.getString(cursor.getColumnIndex("product_price")), cursor.getString(cursor.getColumnIndex("product_unit")), cursor.getString(cursor.getColumnIndex("username")));
+                Toast.makeText(context, "Added to Cart", Toast.LENGTH_SHORT).show();
             }
         });
 
-        buyNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    db.clearTEM();
-                    boolean res =  db.createCheckOut(username,user_loc.latitude,user_loc.longitude,latitude,longitude,Double.parseDouble(crop_price), farmer_name, Integer.parseInt(crop_quantity),crop_name,crop_unit);
-                    Toast.makeText(context, "Check out created", Toast.LENGTH_SHORT).show();
-                    if(res){
-                        Intent intent = new Intent(context,GetQuantity.class);
-                        intent.putExtra("username",username);
-                        context.startActivity(intent);
-                    }else{
-                        Toast.makeText(context, "Order Failed", Toast.LENGTH_SHORT).show();
-                    }
-                }catch (Exception e) {
-                    Log.i("Error", Objects.requireNonNull(e.getMessage()));
-                }
-            }
-        });
         return vi;
     }
 }

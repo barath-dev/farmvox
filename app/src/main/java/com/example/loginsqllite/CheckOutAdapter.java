@@ -61,9 +61,8 @@ public class CheckOutAdapter extends BaseAdapter {
 
         DBHelper db = new DBHelper(context);
 
-        String url =  db.getUrl(cropName.getText().toString());
-        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
-        imageLoaderTask.execute(url);
+
+
         cropImage.setVisibility(View.GONE);
         String name = cursor.getString(cursor.getColumnIndex("product_name"));
         String quantity = cursor.getString(cursor.getColumnIndex("product_quantity"));
@@ -72,6 +71,40 @@ public class CheckOutAdapter extends BaseAdapter {
         cropName.setText( "Product Name : " + name);
         cropQuantity.setText("Available Product Quantity : " + quantity);
         cropPrice.setText("Product Price : " + price);
+
+        if (cropName.getText().toString().toLowerCase().contains("Tomato".toLowerCase())){
+            cropImage.setImageResource(R.drawable.tomato);
+        }
+        /*else if (cropName.getText().toString().toLowerCase().contains("Potato".toLowerCase())){
+            cropImage.setImageResource(R.drawable.potato);
+        }*/
+        else if (cropName.getText().toString().toLowerCase().contains("Cabbage".toLowerCase())){
+            cropImage.setImageResource(R.drawable.cabbage);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("Carrot".toLowerCase())){
+            cropImage.setImageResource(R.drawable.carrot);
+        }
+
+        else if (cropName.getText().toString().toLowerCase().contains("bitter".toLowerCase())){
+            cropImage.setImageResource(R.drawable.bitter);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("Green Chilli".toLowerCase())){
+            cropImage.setImageResource(R.drawable.green_chilly);
+        }
+
+        else if (cropName.getText().toString().toLowerCase().contains("carrot".toLowerCase())){
+            cropImage.setImageResource(R.drawable.carrot);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("beans".toLowerCase())){
+            cropImage.setImageResource(R.drawable.beans);
+        }
+        else{
+            String url =  db.getUrl(cropName.getText().toString());
+
+            ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+            imageLoaderTask.execute(url);
+        }
+
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override

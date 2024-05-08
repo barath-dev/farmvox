@@ -31,12 +31,22 @@ public class Order extends AppCompatActivity {
         String status = getIntent().getStringExtra("status");
         String isConsumer = getIntent().getStringExtra("isConsumer");
 
-        cursor = db.getOrders(username,"Delivered",false);
+        cursor = db.getOrders(username,status,true);
 
-        Log.d("Order", "onCreate: "+cursor.getCount());
+        assert status != null;
+        if (status.equals("Delivered")){
+            cursor = db.getOrders(username,status,false);
+        }
+
+        boolean con = false;
+
+        if(isConsumer!=null && isConsumer.equals("true")){
+            con=true;
+            cursor = db.getOrdersforConsumer(username);
+        }
+
 
         productListView =(ListView) findViewById(R.id.orders);
-        productListView.setAdapter(new OrderAdapter(Order.this,cursor,isConsumer));
-
+        productListView.setAdapter(new OrderAdapter(Order.this,cursor,con));
     }
 }

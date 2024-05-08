@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/cons"
     tools:context=".CheckOut">
 
     <Button
@@ -21,7 +22,7 @@
         android:id="@+id/checkOutList"
         android:layout_width="360dp"
         android:layout_height="548dp"
-        android:layout_marginStart="1dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="46dp"
         android:layout_marginEnd="1dp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,14 +1,9 @@
 package com.example.loginsqllite;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.Rating;
-import android.util.Log;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,25 +13,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.compose.material3.TopAppBarDefaults;
-
 
 public class OrderAdapter extends BaseAdapter {
     Cursor cursor;
-    DBHelper db;
     String username;
 
     Context context;
 
-    String isConsumer;
+    boolean isConsumer;
+
+    String start, end;
 
     private static LayoutInflater inflater = null;
 
 
-    public OrderAdapter (Context context, Cursor cursor,String isConsumer){
+    public OrderAdapter (Context context, Cursor cursor, boolean isConsumer){
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        db = new DBHelper(context);
         this.cursor = cursor;
         this.isConsumer = isConsumer;
     }
@@ -56,7 +49,7 @@ public class OrderAdapter extends BaseAdapter {
         return position;
     }
 
-    @SuppressLint({"Range", "SetTextI18n"})
+    @SuppressLint({"Range", "SetTextI18n", "InflateParams"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
@@ -68,41 +61,72 @@ public class OrderAdapter extends BaseAdapter {
         TextView crop_quantity = vi.findViewById(R.id.productQuantityTextView);
         Button updateOrder = vi.findViewById(R.id.changeStatus);
         Button viewMap = vi.findViewById(R.id.directions);
-
-
         String status = cursor.getString(cursor.getColumnIndex("status"));
         String order_id = cursor.getString(cursor.getColumnIndex("oid"));
         username = cursor.getString(cursor.getColumnIndex("deliveryBoy"));
+        String farmer = cursor.getString(cursor.getColumnIndex("farmer_name"));
+        String consumer = cursor.getString(cursor.getColumnIndex("username"));
 
         ImageView cropImage = (ImageView) vi.findViewById(R.id.productImageView);
         DBHelper db = new DBHelper(context);
 
-        String url =  db.getUrl(cursor.getString(cursor.getColumnIndex("product_name")));
-
-        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
-        imageLoaderTask.execute(url);
 
 
+        if (status.equals("Delivered")) {
+            updateOrder.setVisibility(View.GONE);
+            viewMap.setVisibility(View.GONE);
+        }
 
-      if (isConsumer!=null && isConsumer.equals("true")) {
+      if (isConsumer) {
+
+
           updateOrder.setVisibility(View.GONE);
           viewMap.setText("View Map");
+
+          if (crop_name.getText().toString().toLowerCase().contains("Tomato".toLowerCase())){
+              cropImage.setImageResource(R.drawable.tomato);
+          }
+          else if (crop_name.getText().toString().toLowerCase().contains("Cabbage".toLowerCase())){
+              cropImage.setImageResource(R.drawable.cabbage);
+          }
+          else if (crop_name.getText().toString().toLowerCase().contains("Carrot".toLowerCase())){
+              cropImage.setImageResource(R.drawable.carrot);
+          }
+          else if (crop_name.getText().toString().toLowerCase().contains("bitter".toLowerCase())){
+              cropImage.setImageResource(R.drawable.bitter);
+          }
+          else if (crop_name.getText().toString().toLowerCase().contains("Green Chilli".toLowerCase())){
+              cropImage.setImageResource(R.drawable.green_chilly);
+          }
+
+          else if (crop_name.getText().toString().toLowerCase().contains("carrot".toLowerCase())){
+              cropImage.setImageResource(R.drawable.carrot);
+          }
+          else if (crop_name.getText().toString().toLowerCase().contains("beans".toLowerCase())){
+              cropImage.setImageResource(R.drawable.beans);
+          }
+          else{
+              String url =  db.getUrl(String.valueOf(crop_name));
+
+              ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+              imageLoaderTask.execute(url);
+          }
+
 
           if (status.equals("ordered") || status.equals("picked Up")) {
               viewMap.setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {
                       Intent intent = new Intent(context, Navigation.class);
-                      String lat_d = cursor.getString(cursor.getColumnIndex("latitude_dest"));
-                      String long_d = cursor.getString(cursor.getColumnIndex("longitude_dest"));
-                      String lat_p = cursor.getString(cursor.getColumnIndex("latitude_pickup"));
-                      String long_p =cursor.getString(cursor.getColumnIndex("longitude_pickup"));
-
-                      intent.putExtra("dest_lat",lat_d);
-                      intent.putExtra("dest_long",long_d);
-                      intent.putExtra("pick_lat",lat_p);
-                      intent.putExtra("pick_long",long_p);
-                      context.startActivity(intent);
+                      if (status.equals("ordered")) {
+                          intent.putExtra("start", username);
+                          intent.putExtra("end", farmer);
+                      } else {
+                          intent.putExtra("except",username);
+                          intent.putExtra("start", farmer);
+                          intent.putExtra("end", consumer);
+                      }
+                        context.startActivity(intent);
                   }
               });
           } else {
@@ -120,9 +144,22 @@ public class OrderAdapter extends BaseAdapter {
                 });
           }
       }else{
+
+          TextView mobile = vi.findViewById(R.id.farmerMobile);
+          mobile.setVisibility(View.VISIBLE);
+
+          String mobileNumber = db.getMobile(farmer);
+          mobile.setText("Mobile: "+mobileNumber);
+
+
+
           if (status.equals("ordered")) {
+              start = username;
+              end = farmer;
               updateOrder.setText("pick up");
           } else if (status.equals("picked Up")) {
+                start = farmer;
+                end = consumer;
               updateOrder.setText("deliver");
               viewMap.setText("Delivery Directions");
           } else {
@@ -151,15 +188,9 @@ public class OrderAdapter extends BaseAdapter {
               @Override
               public void onClick(View v) {
                   Intent intent = new Intent(context, Navigation.class);
-                  String lat_d = cursor.getString(cursor.getColumnIndex("latitude_dest"));
-                  String long_d = cursor.getString(cursor.getColumnIndex("longitude_dest"));
-                  String lat_p = cursor.getString(cursor.getColumnIndex("latitude_pickup"));
-                  String long_p =cursor.getString(cursor.getColumnIndex("longitude_pickup"));
-
-                  intent.putExtra("dest_lat",lat_d);
-                  intent.putExtra("dest_long",long_d);
-                  intent.putExtra("pick_lat",lat_p);
-                  intent.putExtra("pick_long",long_p);
+                  intent.putExtra("except",username);
+                  intent.putExtra("start",start);
+                  intent.putExtra("end",end);
                   context.startActivity(intent);
               }
           });
@@ -168,6 +199,37 @@ public class OrderAdapter extends BaseAdapter {
         crop_name.setText("Product Name: " +cursor.getString(cursor.getColumnIndex("product_name")));
         crop_price.setText("Product price: "+cursor.getString(cursor.getColumnIndex("product_price")));
         crop_quantity.setText("Product Quantity:"+cursor.getString(cursor.getColumnIndex("product_quantity")));
+
+
+
+        if (crop_name.getText().toString().toLowerCase().contains("Tomato".toLowerCase())){
+            cropImage.setImageResource(R.drawable.tomato);
+        }
+        else if (crop_name.getText().toString().toLowerCase().contains("Cabbage".toLowerCase())){
+            cropImage.setImageResource(R.drawable.cabbage);
+        }
+        else if (crop_name.getText().toString().toLowerCase().contains("Carrot".toLowerCase())){
+            cropImage.setImageResource(R.drawable.carrot);
+        }
+        else if (crop_name.getText().toString().toLowerCase().contains("bitter".toLowerCase())){
+            cropImage.setImageResource(R.drawable.bitter);
+        }
+        else if (crop_name.getText().toString().toLowerCase().contains("Green Chilli".toLowerCase())){
+            cropImage.setImageResource(R.drawable.green_chilly);
+        }
+
+        else if (crop_name.getText().toString().toLowerCase().contains("carrot".toLowerCase())){
+            cropImage.setImageResource(R.drawable.carrot);
+        }
+        else if (crop_name.getText().toString().toLowerCase().contains("beans".toLowerCase())){
+            cropImage.setImageResource(R.drawable.beans);
+        }
+        else{
+            String url =  db.getUrl(String.valueOf(crop_name));
+
+            ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+            imageLoaderTask.execute(url);
+        }
 
         return vi;
     }

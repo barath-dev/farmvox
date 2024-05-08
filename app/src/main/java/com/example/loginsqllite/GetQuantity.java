@@ -73,9 +73,9 @@ public class GetQuantity extends AppCompatActivity {
                 if (quantityIn > Integer.parseInt(quantity)) {
                     quantityText.setText(quantity);
                     Toast.makeText(GetQuantity.this, "Quantity Exceeded", Toast.LENGTH_SHORT).show();
-                }else if(quantityIn < 0){
+                }else if(quantityIn <= 0){
                     quantityText.setText("0");
-                    Toast.makeText(GetQuantity.this, "Quantity cannot be negative", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GetQuantity.this, "Quantity cannot be negative or zero", Toast.LENGTH_SHORT).show();
                 }
 
                 totalPrice.setText(String.format("Total Price: %d", quantityIn * Integer.parseInt(price)));
@@ -91,8 +91,12 @@ public class GetQuantity extends AppCompatActivity {
             }
             String oid = UUID.randomUUID().toString();
             String Dboy = db1.getFreeDeliveryBoy();
+            if (Dboy.equals("null")) {
+                Toast.makeText(GetQuantity.this, "No Delivery Available", Toast.LENGTH_SHORT).show();
+                return;
+            }
             boolean res = db1.createOrder(username, lat_dest, long_dest, lat_src, long_src, Double.parseDouble(String.valueOf(quantityIn * Integer.parseInt(price))), farmerName, quantityIn, product, unit, oid, Dboy);
-            if (res && !Dboy.equals("null")) {
+            if (res) {
                 boolean res1 = db1.assignOrder(Dboy, oid);
                 if (res1) {
                     Toast.makeText(GetQuantity.this, "Order Placed", Toast.LENGTH_SHORT).show();

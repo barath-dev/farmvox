@@ -52,17 +52,18 @@ public class MyCropsAdapter extends BaseAdapter {
     @SuppressLint({"Range", "InflateParams", "SetTextI18n"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        View vi = convertView;
+        if (convertView == null)
+            vi = inflater.inflate(R.layout.my_crop, null);
+        cursor.moveToPosition(position);
 
-            View vi = convertView;
-            if (convertView == null)
-                vi = inflater.inflate(R.layout.my_crop, null);
-            cursor.moveToPosition(position);
-            TextView cropName = (TextView) vi.findViewById(R.id.cartProductName);
-            TextView cropQuantity = (TextView) vi.findViewById(R.id.cartProductQuantity);
-            TextView cropPrice = (TextView) vi.findViewById(R.id.cartProductPrice);
-            TextView farmerName = (TextView) vi.findViewById(R.id.cartFarmerName);
-            Button buyNowButton = (Button) vi.findViewById(R.id.buyNowButton);
+        TextView cropName = (TextView) vi.findViewById(R.id.cartProductName);
+        TextView cropQuantity = (TextView) vi.findViewById(R.id.cartProductQuantity);
+        TextView cropPrice = (TextView) vi.findViewById(R.id.cartProductPrice);
+        TextView farmerName = (TextView) vi.findViewById(R.id.cartFarmerName);
+        Button buyNowButton = (Button) vi.findViewById(R.id.buyNowButton);
         Button deleteButton = (Button) vi.findViewById(R.id.removeButton);
+
         String crop_name = cursor.getString(cursor.getColumnIndex("product_name"));
         crop_name = "Product Name: "+crop_name;
         String crop_quantity = cursor.getString(cursor.getColumnIndex("product_quantity"));
@@ -78,12 +79,52 @@ public class MyCropsAdapter extends BaseAdapter {
         ImageView cropImage = (ImageView) vi.findViewById(R.id.imageView);
         DBHelper db = new DBHelper(context);
 
-        String url =  db.getUrl(crop_name);
 
-        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
-        imageLoaderTask.execute(url);
+        if (cropName.getText().toString().toLowerCase().contains("Tomato".toLowerCase())){
+            cropImage.setImageResource(R.drawable.tomato);
+        }
+        /*else if (cropName.getText().toString().toLowerCase().contains("Potato".toLowerCase())){
+            cropImage.setImageResource(R.drawable.potato);
+        }*/
+        else if (cropName.getText().toString().toLowerCase().contains("Cabbage".toLowerCase())){
+            cropImage.setImageResource(R.drawable.cabbage);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("Carrot".toLowerCase())){
+            cropImage.setImageResource(R.drawable.carrot);
+        }
+       /* else if (cropName.getText().toString().contains("Brinjal")){
+            cropImage.setImageResource(R.drawable.brinjal);
+        }
+        else if (cropName.getText().toString().contains("Cucumber")){
+            cropImage.setImageResource(R.drawable.cucumber);
+        }
+        else if (cropName.getText().toString().contains("Drumstick")){
+            cropImage.setImageResource(R.drawable.drumstick);
+        }
+        else if (cropName.getText().toString().contains("Garlic")){
+            cropImage.setImageResource(R.drawable.garlic);
+        }*/
+        else if (cropName.getText().toString().toLowerCase().contains("bitter".toLowerCase())){
+            cropImage.setImageResource(R.drawable.bitter);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("Green Chilli".toLowerCase())){
+            cropImage.setImageResource(R.drawable.green_chilly);
+        }
 
+        else if (cropName.getText().toString().toLowerCase().contains("carrot".toLowerCase())){
+            cropImage.setImageResource(R.drawable.carrot);
+        }
+        else if (cropName.getText().toString().toLowerCase().contains("beans".toLowerCase())){
+            cropImage.setImageResource(R.drawable.beans);
+        }
+        else{
+            String url =  db.getUrl(crop_name);
+
+            ImageLoaderTask imageLoaderTask = new ImageLoaderTask(cropImage);
+            imageLoaderTask.execute(url);
+        }
         if(username.equals("admin")){
+            username = cursor.getString(cursor.getColumnIndex("username"));
             farmerName.setVisibility(View.VISIBLE);
             String farmer_name = cursor.getString(cursor.getColumnIndex("username"));
             farmer_name = "Farmer Name: "+farmer_name;
@@ -96,12 +137,17 @@ public class MyCropsAdapter extends BaseAdapter {
 
         deleteButton.setText("Delete");
 
+        String finalCrop_name = crop_name;
+        String finalCrop_quantity = crop_quantity;
+        String finalCrop_price = crop_price;
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DBHelper db = new DBHelper(context);
-                /*Toast.makeText(context, "delete clicked", Toast.LENGTH_SHORT).show();*/
-                String res= db.deleteCrop(username);
+                Toast.makeText(context, finalCrop_name, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, finalCrop_quantity, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, finalCrop_price, Toast.LENGTH_SHORT).show();
+                String res = db.deleteCrop(username, finalCrop_name.substring(14), finalCrop_quantity.substring(18), finalCrop_price.substring(16));
                 Toast.makeText(context, res, Toast.LENGTH_SHORT).show();
                 notifyDataSetChanged();
             }

@@ -25,7 +25,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public  static final String PRICES_TABLE_NAME = "prices";
 
-    private static final int USER_DATABASE_VERSION = 6; // Change this version number
+    private static final int USER_DATABASE_VERSION = 6;
 
     public static final String USER_TABLE_NAME = "users";
     public static final String USER_COL_USERNAME = "username";
@@ -91,6 +91,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String PRODUCT_COL_RATING = "rating";
 
+    public  static  final String USER_COL_MOBILE = "mobile";
+
     public static final String PRODUCT_COL_RATING_COUNT = "rating_count";
 
 
@@ -102,7 +104,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create the users table
-        db.execSQL("create Table " + USER_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT primary key, " + USER_COL_PASSWORD + " TEXT, " + USER_COL_ROLE + " TEXT, " + USER_COL_LATITUDE + " REAL, " + USER_COL_LONGITUDE + " REAL)");
+        db.execSQL("create Table " + USER_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT primary key, " + USER_COL_PASSWORD + " TEXT, " + USER_COL_MOBILE + " TEXT, " + USER_COL_ROLE + " TEXT, " + USER_COL_LATITUDE + " REAL, " + USER_COL_LONGITUDE + " REAL)");
 
         db.execSQL("create Table " + PRODUCT_TABLE_NAME + " (" + USER_COL_USERNAME + " TEXT, "  + PRODUCT_COL_LATITUDE + " REAL, " + PRODUCT_COL_LONGITUDE + " REAL, " + PRODUCT_COL_PRODUCT_NAME + " TEXT, "+ PRODUCT_COL_PRODUCT_UNIT + " TEXT, " +PRODUCT_COL_PRODUCT_PRICE + " REAL, " + PRODUCT_COL_RATING + " INTEGER, " +PRODUCT_COL_RATING_COUNT + " INTEGER, " + PRODUCT_COL_PRODUCT_QUANTITY + " INTEGER)");
 
@@ -309,13 +311,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.query(PRODUCT_TABLE_NAME,columns,selection,selectionArgs,null,null,null);
     }
 
-    public String deleteCrop(String username){
+    public String deleteCrop(String username, String product_name, String product_quantity, String product_price) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int res = db.delete(PRODUCT_TABLE_NAME,PRODUCT_COL_USERNAME + " = ?",new String[]{username});
-
-        if(res > 0){
+        int res = db.delete(PRODUCT_TABLE_NAME, PRODUCT_COL_USERNAME + " = ? AND " + PRODUCT_COL_PRODUCT_NAME + " = ? AND " + PRODUCT_COL_PRODUCT_QUANTITY + " = ? AND " + PRODUCT_COL_PRODUCT_PRICE + " = ?", new String[]{username, product_name, product_quantity, product_price});
+        db.close();
+        if (res > 0) {
             return "Deleted";
-        }else{
+        } else {
             return String.valueOf(res);
         }
     }
@@ -396,7 +398,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 PRODUCT_COL_RATING_COUNT
         };
 
-        String[] selectionArgs = {"0"};
         Cursor cursor = db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, null);
         return cursor;
     }
@@ -600,7 +601,7 @@ public class DBHelper extends SQLiteOpenHelper {
         };
 
         // Define the WHERE clause to find the user by username and the status of the order
-        String selection = forDeliveryBoy?ORDERS_COL_DELIERYBOY + " = ? AND " + DISPATCHERS_COL_STATUS + " = ? OR " + DISPATCHERS_COL_STATUS + " = ?":ORDER_COL_USERNAME + " = ? AND " + DISPATCHERS_COL_STATUS + " = ? ";
+        String selection = forDeliveryBoy?ORDERS_COL_DELIERYBOY + " = ? AND " + DISPATCHERS_COL_STATUS + " = ? OR " + DISPATCHERS_COL_STATUS + " = ?":ORDERS_COL_DELIERYBOY + " = ? AND " + DISPATCHERS_COL_STATUS + " = ? ";
         String[] selectionArgs = forDeliveryBoy? new String[]{username, status, "picked Up"} : new String[]{username, status,};
 
         return db.query(ORDERS_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
@@ -659,7 +660,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean freeDispatcher(String oid,String dboy) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DISPATCHERS_COL_STATUS, "Free");
+        contentValues.put(DISPATCHERS_COL_STATUS, "Available");
         contentValues.put(DISPATCHERS_COL_CURRENT_ORDER_ID, "");
         contentValues.put(DISPATCHERS_COL_DELIVERY_COUNT, getCount(dboy) + 1);
         String selection = DISPATCHERS_COL_CURRENT_ORDER_ID + " = ?";
@@ -874,11 +875,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return 0;
     }
 
+    @SuppressLint("Range")
     public Cursor sortProducts(String sort) {
         String[] sortOptionsList = new String[]{"Price: Low to High", "Price: High to Low", "Rating: Low to High", "Rating: High to Low"};
         SQLiteDatabase db = this.getReadableDatabase();
 
-        // Define the columns you want to retrieve
         String[] columns = {
                 PRODUCT_COL_USERNAME,
                 PRODUCT_COL_LATITUDE,
@@ -891,21 +892,125 @@ public class DBHelper extends SQLiteOpenHelper {
                 PRODUCT_COL_RATING_COUNT
         };
 
-        // Define the WHERE clause to find the user by username
-        String selection = PRODUCT_COL_PRODUCT_NAME + " = ?";
-        String[] selectionArgs = {sort};
-
         // Execute the query and return the Cursor
        if (sort.equals(sortOptionsList[0])) {
             return db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, PRODUCT_COL_PRODUCT_PRICE + " ASC");
         } else if (sort.equals(sortOptionsList[1])) {
             return db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, PRODUCT_COL_PRODUCT_PRICE + " DESC");
         } else if (sort.equals(sortOptionsList[2])) {
-            return db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, PRODUCT_COL_RATING + " ASC");
-        } else if (sort.equals(sortOptionsList[3])) {
+           Log.i("Sorting","entered sorting");
+           Cursor cursor = db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, PRODUCT_COL_RATING);
+           cursor.moveToFirst();
+           cursor.moveToNext();
+           Log.i("Sorting",cursor.getString(cursor.getColumnIndex("rating")));
+           return  cursor;
+       } else if (sort.equals(sortOptionsList[3])) {
             return db.query(PRODUCT_TABLE_NAME, columns, null, null, null, null, PRODUCT_COL_RATING + " DESC");
         } else {
             return null;
         }
+    }
+
+    public Cursor getOrdersforConsumer(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {
+                ORDER_COL_USERNAME,
+                ORDER_COL_LATITUDE_PICKUP,
+                ORDER_COL_LONGITUDE_PICKUP,
+                ORDER_COL_LATITUDE_DEST,
+                ORDER_COL_LONGITUDE_DEST,
+                ORDER_COL_PRODUCT_PRICE,
+                ORDER_COL_PRODUCT_QUANTITY,
+                ORDER_COL_F_NAME,
+                ORDER_COL_PRODUCT_UNIT,
+                ORDER_COL_PRODUCT_NAME,
+                DISPATCHERS_COL_STATUS,
+                ORDER_COL_ID,
+                ORDERS_COL_DELIERYBOY
+        };
+
+        // Define the WHERE clause to find the user by username
+        String selection = ORDER_COL_USERNAME + " = ? ";
+        String[] selectionArgs = {username};
+
+
+        // Execute the query and return the Cursor
+        return db.query(ORDERS_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+    }
+
+    //create two farmers and two consumers for testing
+    public void createTestAccounts(){
+       SQLiteDatabase db = this.getWritableDatabase();
+         ContentValues contentValues = new ContentValues();
+            contentValues.put(USER_COL_USERNAME, "farmer1");
+            contentValues.put(USER_COL_PASSWORD, "123456");
+            contentValues.put(USER_COL_ROLE, "Farmer");
+            contentValues.put(USER_COL_MOBILE,"6309421605");
+            contentValues.put(USER_COL_LATITUDE, 17.33713511425032);
+            contentValues.put(USER_COL_LONGITUDE, 78.57280529291393);
+            db.insert(USER_TABLE_NAME, null, contentValues);
+            //farmer 2
+            contentValues.put(USER_COL_USERNAME, "farmer2");
+            contentValues.put(USER_COL_PASSWORD, "123456");
+            contentValues.put(USER_COL_ROLE, "Farmer");
+            contentValues.put(USER_COL_MOBILE,"6304380749");
+            contentValues.put(USER_COL_LATITUDE, 17.41180531641439);
+            contentValues.put(USER_COL_LONGITUDE, 78.39869579553871);
+            db.insert(USER_TABLE_NAME, null, contentValues);
+            //consumer 1
+            contentValues.put(USER_COL_USERNAME, "consumer1");
+            contentValues.put(USER_COL_PASSWORD, "123456");
+            contentValues.put(USER_COL_ROLE, "Consumer");
+            contentValues.put(USER_COL_LATITUDE, 17.418918024389647);
+            contentValues.put(USER_COL_LONGITUDE, 78.3428287764745);
+
+            db.insert(USER_TABLE_NAME, null, contentValues);
+            //consumer 2
+            contentValues.put(USER_COL_USERNAME, "consumer2");
+            contentValues.put(USER_COL_PASSWORD, "123456");
+            contentValues.put(USER_COL_ROLE, "Consumer");
+            contentValues.put(USER_COL_LATITUDE, 17.43091852777958);
+            contentValues.put(USER_COL_LONGITUDE, 78.36724503422434);
+
+            db.insert(USER_TABLE_NAME, null, contentValues);
+    }
+
+    //update location in user table
+    public void updateLocation(String username, double latitude, double longitude) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_COL_LATITUDE, latitude);
+        contentValues.put(USER_COL_LONGITUDE, longitude);
+        String selection = USER_COL_USERNAME + " = ?";
+        String[] selectionArgs = {username};
+        db.update(USER_TABLE_NAME, contentValues, selection, selectionArgs);
+    }
+
+    //set mobile number for the user
+    public void setMobile(String username, String mobile) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_COL_MOBILE, mobile);
+        String selection = USER_COL_USERNAME + " = ?";
+        String[] selectionArgs = {username};
+        db.update(USER_TABLE_NAME, contentValues, selection, selectionArgs);
+    }
+
+    //get mobile number for the user
+    @SuppressLint("Range")
+    public String getMobile(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {
+                USER_COL_MOBILE
+        };
+        String selection = USER_COL_USERNAME + " = ?";
+        String[] selectionArgs = {username};
+        Cursor cursor = db.query(USER_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+        if(cursor != null && cursor.moveToFirst()){
+            return cursor.getString(cursor.getColumnIndex(USER_COL_MOBILE));
+        }
+        return null;
     }
 }

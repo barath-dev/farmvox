@@ -1,5 +1,6 @@
 package com.example.loginsqllite;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ImageLoaderTask extends AsyncTask<String, Void, Bitmap> {
+    @SuppressLint("StaticFieldLeak")
     private final ImageView imageView;
 
     public ImageLoaderTask(ImageView imageView) {

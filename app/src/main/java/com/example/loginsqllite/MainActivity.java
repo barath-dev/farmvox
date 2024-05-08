@@ -36,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         repassword = (EditText) findViewById(R.id.repassword);
@@ -84,16 +82,17 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     if (pass.equals(repass)) {
                         boolean checkuser = DB.checkusername(user);
+                        DB.createTestAccounts();
                         if (!checkuser) {
                             retrieveLocation(new LocationCallback() {
                                 @Override
                                 public void onLocationReceived(double latitude, double longitude) {
-                                    boolean insert = DB.insertuserdata(user, pass, selectedRole, latitude, longitude-2);
+                                    boolean insert = DB.insertuserdata(user, pass, selectedRole, latitude, longitude);
                                     if (insert) {
                                         Toast.makeText(MainActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
                                         String userRole=DB.getUserRole(user);
                                         if("Farmer".equals(userRole)){
-                                            Intent farmerIntent=new Intent(getApplicationContext(),Farmer.class);
+                                            Intent farmerIntent=new Intent(getApplicationContext(),GetMobileNumber.class);
                                             farmerIntent.putExtra("username", user);
                                             startActivity(farmerIntent);
                                         } else if ("Consumer".equals(userRole)) {
@@ -148,17 +147,13 @@ public class MainActivity extends AppCompatActivity {
                 // Use fusedLocationClient to get the location
                 fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                     if (location != null) {
-                       double latitude = 12.9716;
-                        double longitude = 77.5946;
+                       double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
                         // Call the callback with the obtained latitude and longitude
                         callback.onLocationReceived(latitude, longitude);
                     } else {
-/*
-                        Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show();
-*/
-                        double latitude = 13.0827;
-                        double longitude = 80.3707;
-                        callback.onLocationReceived(latitude, longitude);
+                        // If fusedLocationClient is unable to get the location, use a default location
+                        callback.onLocationReceived(17.411311, 78.398594);
                     }
                 });
             } else {

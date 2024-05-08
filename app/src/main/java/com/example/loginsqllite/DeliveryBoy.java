@@ -31,7 +31,7 @@ public class DeliveryBoy extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DeliveryBoy.this, Order.class);
-                intent.putExtra("status", "delivered");
+                intent.putExtra("status", "Delivered");
                 intent.putExtra("username", username);
                 startActivity(intent);
             }

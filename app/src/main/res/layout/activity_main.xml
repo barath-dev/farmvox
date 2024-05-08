@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    android:background="@drawable/cover1"
     tools:context=".MainActivity">
 
 
@@ -28,6 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
+        android:inputType="textPassword"
         android:layout_marginTop="50dp"
         android:layout_below="@+id/role_spinner"/>
 
@@ -36,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Retype Password"
+        android:inputType="textPassword"
         android:layout_marginTop="50dp"
         android:layout_below="@+id/password"/>
 
@@ -53,6 +56,7 @@
         android:layout_height="wrap_content"
         android:text="Existing user! Go to Sign in page"
         android:layout_marginTop="50dp"
-        android:layout_below="@+id/btnsignup"/>
+        android:layout_below="@+id/btnsignup"
+        tools:ignore="HardcodedText" />
 
 </RelativeLayout>
